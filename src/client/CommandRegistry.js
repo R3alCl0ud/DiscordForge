@@ -1,4 +1,3 @@
-const DiscordJS = require('discord.js');
 const Guild = require('./models/guild');
 /**
  * This is the CommandRegistry holds all of the commands in the world
@@ -7,9 +6,9 @@ const Guild = require('./models/guild');
 class CommandRegistry {
 
     constructor() {
-        this.plugins = new DiscordJS.Collection();
-        this.commands = new DiscordJS.Collection();
-        this.aliases = new DiscordJS.Collection();
+        this.plugins = new Map();
+        this.commands = new Map();
+        this.aliases = new Map();
     }
 
     reloadPlugin(plugin) {
