@@ -21,7 +21,7 @@ class ForgeClient extends DiscordJS.Client {
     this.forgeManager = new ForgeManager(this);
 
 
-    this.registry = new CommandRegistry();
+    this.registry = new CommandRegistry(this);
 
 
     this.commandHandler = new CommandHandler(this);

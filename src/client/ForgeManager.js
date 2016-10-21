@@ -8,7 +8,7 @@ class ForgeManager {
     this.client.resolver.resolveGuild = this.resolveGuild();
   }
   get pastReady() {
-    return this.client.ws.status === 0;
+    return this.client.ws.status == 0;
   }
 
   newGuild() {

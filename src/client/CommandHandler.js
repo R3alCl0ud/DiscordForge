@@ -55,7 +55,7 @@ class commandHandler {
       let label = args[0].substring(message.guild.prefix.length);
       label = plugin.aliases.get(label) || label;
       if ((command = this.client.registry.commands.get(label) !== null) || (command = this.client.registry.commands.get(label.toLowerCase()) !== null && !command.caseSensitive)) {
-        console.log(args.length > 1, command.id);
+        console.log(args.length > 1, "Place");
         if (args.length > 1) return this.isSubCommand(args[1], command);
         return command;
       }
@@ -71,10 +71,13 @@ class commandHandler {
     } else {
       let args = message.content.split(" ");
       let label = args[0].substring(message.guild.prefix.length);
+
       label = this.client.registry.aliases.get(label) || label;
       console.log(label);
-      if ((command = this.client.registry.commands.get(label) !== null) || (command = this.client.registry.commands.get(label.toLowerCase()) !== null && !command.caseSensitive)) {
+      if ((command = this.client.registry.commands.get(label)) !== undefined || (command = this.client.registry.commands.get(label.toLowerCase())) !== undefined && !command.caseSensitive) {
+        console.log(args.length > 1, "Place");
         if (args.length > 1) return this.isSubCommand(args.splice(0, 1), command);
+        console.log(command);
         return command;
       }
 
@@ -99,7 +102,7 @@ class commandHandler {
   }
 
   _handleMessage() {
-    return function(message) {
+    return function (message) {
       const { author, channel, guild } = message;
       let cmdArgs = message.content.split(' ');
 

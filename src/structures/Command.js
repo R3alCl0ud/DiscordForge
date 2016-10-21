@@ -1,5 +1,5 @@
 const DiscordJS = require('discord.js');
-const Plugin = require('./plugin');
+const Plugin = require('./Plugin');
 
 /**
  * Options to be passed to used in a command

@@ -1,5 +1,5 @@
 const EventEmitter = require('events').EventEmitter;
-const Command = require('./command');
+const Command = require('./Command');
 
 class Plugin extends EventEmitter {
 

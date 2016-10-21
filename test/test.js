@@ -1,6 +1,6 @@
 const Forge = require('../');
 const auth = require('./auth.json');
-const Client = new Forge.ForgeClient();
+const Client = new Forge.ForgeClient({ selfBot: true});
 
 console.log(auth);
 class testCommand extends Forge.Command {
@@ -9,7 +9,7 @@ class testCommand extends Forge.Command {
   }
 
 }
-class testFuctionCommand extends Forge.Command {
+class testFunctionCommand extends Forge.Command {
   constructor(commandRegistry) {
     super("testFunction", null, commandRegistry);
 
@@ -36,12 +36,13 @@ Client.on('ready', () => {
   Client.user.setGame("Self Bot");
 
   Client.registry.registerCommand(new testCommand(Client.registry));
+  Client.registry.registerCommand(new testFunctionCommand(Client.registry));
 });
 
 Client.on('error', console.log);
 Client.on('debug', console.log);
-Client.handleCommands();
 
-Client.login("MTc3NDQ1OTIzMzQ4MDIxMjQ4.Cuv-ww.N681UcDExaBozc3CioGQdkocYA8").then(() => {
+Client.login(auth.token).then(() => {
   console.log("Logged in");
+  Client.handleCommands();
 }).catch(console.log);
