@@ -26,7 +26,7 @@ class commandHandler {
       if (command) {
         if (typeof command.Message === 'string') {
           channel.sendMessage(command.Message);
-        } else if (command.Message){
+        } else if (command.Message) {
           command.Message(message, author, channel, guild, this.client);
         }
       }
@@ -49,13 +49,18 @@ class commandHandler {
   }
 
   isCommand(message, perGuild = false) {
+    let command;
     if (perGuild) {
       let args = message.content.split(" ");
+      let label = args[0].substring(message.guild.prefix.length);
+      label = plugin.aliases.get(label) || label;
+      if ((command = this.client.registry.commands.get(label) !== null) || (command = this.client.registry.commands.get(label.toLowerCase()) !== null && !command.caseSensitive)) {
+        console.log(args.length > 1, command.id);
+        if (args.length > 1) return this.isSubCommand(args[1], command);
+        return command;
+      }
       this.client.registry.plugins.forEach(plugin => {
         if (message.guild.enabledPlugins.indexOf(plugin.id) !== -1) {
-          let label = args[0].substring(message.guild.prefix.length);
-          label = plugin.aliases.get(label) || label;
-          let command;
           if ((command = plugin.commands.get(label) !== null) || (command = plugin.commands.get(label.toLowerCase()) !== null && !command.caseSensitive)) {
             if (args.length > 1) return this.isSubCommand(args[1], command);
             return command;
@@ -65,10 +70,16 @@ class commandHandler {
       return null;
     } else {
       let args = message.content.split(" ");
+      let label = args[0].substring(message.guild.prefix.length);
+      label = this.client.registry.aliases.get(label) || label;
+      console.log(label);
+      if ((command = this.client.registry.commands.get(label) !== null) || (command = this.client.registry.commands.get(label.toLowerCase()) !== null && !command.caseSensitive)) {
+        if (args.length > 1) return this.isSubCommand(args.splice(0, 1), command);
+        return command;
+      }
+
       this.client.registry.plugins.forEach(plugin => {
-        let label = args[0].substring(message.guild.prefix.length);
         label = plugin.aliases.get(label) || label;
-        let command;
         if ((command = plugin.commands.get(label) !== null) || (command = plugin.commands.get(label.toLowerCase()) !== null && !command.caseSensitive)) {
           if (args.length > 1) return this.isSubCommand(args.splice(0, 1), command);
           return command;
@@ -79,7 +90,7 @@ class commandHandler {
   }
 
   isSubCommand(args, command) {
-    let id = command.subCommandAliases.get(args[1]) || args[1];
+    let id = command.subCommandAliases.get(args[0]) || args[0];
     let subCommand;
     if ((subCommand = command.subCommands.get(id) !== null) || (subCommand = command.subCommands.get(id.toLowerCase()) && !subCommand.caseSensitive)) {
       if (args.length > 1) return this.isSubCommand(args.splice(0, 1), command);
