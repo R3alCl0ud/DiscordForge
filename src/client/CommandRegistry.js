@@ -7,27 +7,32 @@ const Command = require('../structures/Command');
  */
 class CommandRegistry {
 
-    constructor() {
-        this.plugins = new Map();
-        this.commands = new Map();
-        this.aliases = new Map();
-    }
+  constructor(client) {
+    this.client = client;
+    this.plugins = new Map();
+    this.commands = new Map();
+    this.aliases = new Map();
+  }
 
-    reloadPlugin(plugin) {
+  reloadPlugin(plugin) {
 
-    }
+  }
 
-    registerPlugin(plugin) {
-        this.plugins.set(plugin.id, plugin);
+  registerPlugin(plugin) {
+    if (plugin instanceof Plugin) {
+      this.plugins.set(plugin.id, plugin);
     }
+  }
 
-    registerAlias(command, alias) {
-        this.aliases.set(alias, command);
-    }
+  registerAlias(command, alias) {
+    this.aliases.set(alias, command);
+  }
 
-    registerCommand(command) {
-        if (command instanceOf Command) this.commands.set(command.id, command);
+  registerCommand(command) {
+    if (command instanceof Command) {
+        this.commands.set(command.id, command);
     }
+  }
 }
 
 module.exports = CommandRegistry;

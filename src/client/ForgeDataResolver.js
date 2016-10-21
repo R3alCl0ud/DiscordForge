@@ -1,0 +1,5 @@
+class ForgeDataResolver {
+  constructor(client) {
+    
+  }
+}

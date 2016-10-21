@@ -37,18 +37,18 @@ class Command {
         this._id = id;
 
         /**
-         *
+         * If the command is case sensitive
          * @type {boolean}
          */
         this.caseSensitive = true;
         /**
-         *
+         * If the command can only be used in DM/GroupDM.
          * @type {boolean}
          */
         this.dmOnly = false;
 
         /**
-         *
+         * If the command can only be used in a guild channel. Cannot be true is dmOnly is true.
          * @type {boolean}
          */
         this.guildOnly = false;
@@ -69,6 +69,12 @@ class Command {
          */
         this.names = [];
 
+        /**
+         *
+         * @type {boolean}
+         */
+        this.defaultHelp = true;
+
         if (msgGenerator instanceof Array) {
             msgGenerator.forEach(message => {
                this.responses.push(message);
@@ -82,7 +88,7 @@ class Command {
         }
 
         this.subCommands = new DiscordJS.Collection();
-        this.subCommandsAliases = new DiscordJS.Collection();
+        this.subCommandAliases = new DiscordJS.Collection();
 
 
         if (this.names && this.names instanceof Array) {
@@ -102,7 +108,7 @@ class Command {
 
 
     setSubAlias(subCommand, alias) {
-        this.subCommandsAliases.set(alias, subCommand);
+        this.subCommandAliases.set(alias, subCommand);
     }
 
     _addAlias(alias) {
@@ -133,7 +139,11 @@ class Command {
     }
 
     get aliases() {
-        return this.plugin.aliases.get(this._id);
+        if (this.Parent instanceof Command){
+            return this.Parent.subCommandAliases.get(this._id);
+        } else {
+            return this.Parent.aliases.get(this._id);
+        }
     }
 
     get id() {
