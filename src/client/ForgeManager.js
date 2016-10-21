@@ -1,12 +1,12 @@
 const Guild = require('../structures/Guild');
 const Plugin = require('../structures/Plugin');
 
-class ClientManager {
+class ForgeManager {
   constructor(client) {
     this.client = client;
   }
   get pastReady() {
-    return this.client.ws.status === Constants.Status.READY;
+    return this.client.ws.status === 0;
   }
 
   newGuild(data) {
@@ -20,12 +20,12 @@ class ClientManager {
        * @param {Guild} guild The created guild
        */
       if (this.client.options.fetchAllMembers) {
-        guild.fetchMembers().then(() => { this.client.emit('debug', `Setup guild ${guild.name}`)});
       } else {
-        this.client.emit('debug', `Setup guild ${guild.name}`)
       }
     }
     return guild;
   }
 
 }
+
+module.exports = ForgeManager;

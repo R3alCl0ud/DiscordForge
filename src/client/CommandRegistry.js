@@ -1,4 +1,6 @@
-const Guild = require('./models/guild');
+const Guild = require('../structures/Guild');
+const Plugin = require('../structures/Plugin');
+const Command = require('../structures/Command');
 /**
  * This is the CommandRegistry holds all of the commands in the world
  *
@@ -24,12 +26,7 @@ class CommandRegistry {
     }
 
     registerCommand(command) {
-        if (command.Message == null) {
-            console.log("No message generator supplied");
-        } else if (!Object.getPrototypeOf(command) === CommandObj) {
-            return new Error("can not register non-command object");
-        }
-        this.commands.set(command.id, command)
+        if (command instanceOf Command) this.commands.set(command.id, command);
     }
 }
 

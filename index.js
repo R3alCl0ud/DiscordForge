@@ -16,7 +16,7 @@ module.exports = {
     isRoleServer: require('./src/util').isRoleServer,
     hasPerms: require('./src/util').hasPerms,
 
-    CommandClient: require('./src/client/CommandClient'),
+    ForgeClient: require('./src/client/ForgeClient'),
     CommandHandler: require('./src/structures/CommandHandler'),
 
     Plugin: require('./src/structures/Plugin'),

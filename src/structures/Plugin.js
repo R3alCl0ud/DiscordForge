@@ -1,8 +1,8 @@
 const EventEmitter = require('events').EventEmitter;
-const DiscordJS = require('discord.js');
-const CommandObj = require('./command');
+const Command = require('./command');
 
 class Plugin extends EventEmitter {
+
     /**
      * @param {string|object} ID The ID of the Plugin
      * @param {string} [Name] The name of the Plugin
@@ -25,21 +25,18 @@ class Plugin extends EventEmitter {
             this.version = version;
             this.description = description;
         }
-        this.commands = new DiscordJS.Collection();
-        this.aliases = new DiscordJS.Collection();
+        this.commands = new Map();
+        this.aliases = new Map();
     }
-    
+
     registerAlias(command, alias) {
         this.aliases.set(alias, command);
     }
 
     registerCommand(command) {
-        if (command.Message == null) {
-            console.log("No message generator supplied");
-        } else if (!Object.getPrototypeOf(command) === CommandObj) {
-            return new Error("can not register non-command object");
+        if (command instanceof Command && !this._commands.has(command.id)) {
+            this.commands.set(command.id, command);
         }
-        this.commands.set(command.id, command)
     }
 }
 

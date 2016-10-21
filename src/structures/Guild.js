@@ -37,7 +37,7 @@ module.exports = class guild extends DiscordJS.Guild {
             })
         }
         this._prefix = data.prefix || this.client.defaults.prefix;
-        this.enabledPlugins = data.enabledPlugins ? (data.enabledPlugins.length > 0 ? data.enabledPlugins : ["music", "currency", "help", "config", "custom"]) : ["music", "currency", "help", "config", "custom"];
+        // this.enabledPlugins = data.enabledPlugins ? (data.enabledPlugins.length > 0 ? data.enabledPlugins : ["music", "currency", "help", "config", "custom"]) : ["music", "currency", "help", "config", "custom"];
     }
 
     registerCommand(command) {
