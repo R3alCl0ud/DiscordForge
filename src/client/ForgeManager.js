@@ -11,6 +11,7 @@ class ForgeManager {
     return this.client.ws.status == 0;
   }
 
+  
   newGuild() {
     return function(data) {
       const already = this.client.guilds.has(data.id);

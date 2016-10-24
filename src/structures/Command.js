@@ -75,6 +75,9 @@ class Command {
          */
         this.defaultHelp = true;
 
+
+        this._responses = [];
+
         if (msgGenerator instanceof Array) {
             msgGenerator.forEach(message => {
                this.responses.push(message);
@@ -84,7 +87,11 @@ class Command {
         }
 
         for (const option of Object.keys(options)) {
+          if (option === 'guildOnly') {
+            if (!this.dmOnly === true) this.guildOnly = false;
+          } else {
             this[option] = options[option];
+          }
         }
 
         this.subCommands = new DiscordJS.Collection();
@@ -148,6 +155,10 @@ class Command {
 
     get id() {
         return this._id;
+    }
+
+    get responses() {
+      return this._responses;
     }
 }
 

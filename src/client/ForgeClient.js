@@ -3,7 +3,7 @@ const DiscordJS = require('discord.js');
 const fs = require('fs');
 
 const util = require('../util');
-const CommandRegistry = require('./CommandRegistry');
+const ForgeRegistry = require('./ForgeRegistry');
 const CommandHandler = require('./CommandHandler');
 const ForgeManager = require('./ForgeManager');
 
@@ -21,7 +21,7 @@ class ForgeClient extends DiscordJS.Client {
     this.forgeManager = new ForgeManager(this);
 
 
-    this.registry = new CommandRegistry(this);
+    this.registry = new ForgeRegistry(this);
 
 
     this.commandHandler = new CommandHandler(this);

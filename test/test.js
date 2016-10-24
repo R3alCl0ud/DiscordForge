@@ -1,6 +1,8 @@
 const Forge = require('../');
 const auth = require('./auth.json');
-const Client = new Forge.ForgeClient({ selfBot: true});
+
+const ExamplePlugin = require('./selfPlugin');
+const Client = new Forge.ForgeClient({ selfBot: true, prefix: "//"});
 
 console.log(auth);
 class testCommand extends Forge.Command {
@@ -37,6 +39,7 @@ Client.on('ready', () => {
 
   Client.registry.registerCommand(new testCommand(Client.registry));
   Client.registry.registerCommand(new testFunctionCommand(Client.registry));
+  Client.registry.registerPlugin(new ExamplePlugin(Client));
 });
 
 Client.on('error', console.log);

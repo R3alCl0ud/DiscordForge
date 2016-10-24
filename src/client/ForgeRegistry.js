@@ -2,10 +2,10 @@ const Guild = require('../structures/Guild');
 const Plugin = require('../structures/Plugin');
 const Command = require('../structures/Command');
 /**
- * This is the CommandRegistry holds all of the commands in the world
+ * This is the ForgeRegistry Register all the stuff to it
  *
  */
-class CommandRegistry {
+class ForgeRegistry {
 
   constructor(client) {
     this.client = client;
@@ -35,4 +35,4 @@ class CommandRegistry {
   }
 }
 
-module.exports = CommandRegistry;
+module.exports = ForgeRegistry;
