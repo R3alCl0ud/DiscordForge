@@ -22,135 +22,147 @@ class commandHandler {
       console.log(guild.name, this.client.defaults.prefix);
       if (cmdArgs[0].substring(0, this.client.defaults.prefix.length) != this.client.defaults.prefix) return;
 
-      const command = this.isCommand(message);
-      if (command) {
-        console.log(command.responses);
+      console.log("Text, default");
+      const command = this.getCommand(message);
+      console.log(command.id);
+      if (command != null) {
         if (command.dmOnly === true) return;
         if (typeof command.Message === 'string') {
-          return channel.sendMessage(command.Message);
+          channel.sendMessage(command.Message);
         } else if (typeof command.Message === 'function') {
-          return command.Message(message, author, channel, guild, this.client);
-        }
-        /*else if (command.responses.length > 1) {
+          command.Message(message, author, channel, guild, this.client);
+        } else if (command.responses.length > 1) {
           let response = command.responses[Math.random() * (command.responses.length - 1)];
           if (typeof response === 'string') {
             return channel.sendMessage(response);
           } else if (typeof response === 'function') {
             return response(message, author, channel, guild, this.client);
           }
-        }*/
+        }
       }
     }
   }
 
   handleGroupDM(message, author, group) {
-    const command = this.isCommand(message);
+    console.log("GroupDM");
+    let cmdArgs = message.content.split(' ');
+    if (cmdArgs[0].substring(0, this.client.defaults.prefix.length) != this.client.defaults.prefix) return;
+    const command = this.getCommand(message);
     if (command) {
       if (command.guildOnly === true) return;
       if (typeof command.Message === 'string') {
-        group.sendMessage(command.Message);
+        return group.sendMessage(command.Message);
       } else if (typeof command.Message === 'function') {
-        command.Message(message, author, group, this.client);
-      } /*else if (command.responses.length > 1) {
+        return command.Message(message, author, group, this.client);
+      } else if (command.responses.length > 1) {
         let response = command.responses[Math.random() * (command.responses.length - 1)];
         if (typeof response === 'string') {
           group.sendMessage(response);
         } else if (typeof response === 'function') {
           response(message, author, group, this.client);
         }
-      }*/
+      }
     }
   }
 
   handleDM(message, author, dmChannel) {
-    const command = this.isCommand(message);
+    console.log("DM");
+    let cmdArgs = message.content.split(' ');
+    if (cmdArgs[0].substring(0, this.client.defaults.prefix.length) != this.client.defaults.prefix) return;
+    const command = this.getCommand(message);
     if (command) {
       if (command.guildOnly === true) return;
       if (typeof command.Message === 'string') {
-        dmChannel.sendMessage(command.Message);
+        return dmChannel.sendMessage(command.Message);
       } else if (typeof command.Message === 'function') {
-        command.Message(message, author, dmChannel, this.client);
-      } /*else if (command.responses.length > 1) {
+        return command.Message(message, author, dmChannel, this.client);
+      } else if (command.responses.length > 1) {
         let response = command.responses[Math.random() * (command.responses.length - 1)];
         if (typeof response === 'string') {
           dmChannel.sendMessage(response);
         } else if (typeof response === 'function') {
           response(message, author, dmChannel, this.client);
         }
-      }*/
+      }
     }
   }
 
   perGuild(message, author, channel, guild) {
-    const command = this.isCommand(message, true);
+    console.log("Text, perguild");
+    const command = this.getCommand(message, true);
     if (command) {
       if (command.dmOnly === true) return;
       if (typeof command.Message === 'string') {
-        channel.sendMessage(command.Message);
+        return channel.sendMessage(command.Message);
       } else if (typeof command.Message === 'function') {
-        command.Message(message, author, channel, guild, this.client);
+        return command.Message(message, author, channel, guild, this.client);
       } else if (command.responses.length > 1) {
         let response = command.responses[Math.random() * (command.responses.length - 1)];
         if (typeof response === 'string') {
-          channel.sendMessage(response);
+          return channel.sendMessage(response);
         } else if (typeof response === 'function') {
-          response(message, author, channel, guild, this.client);
+          return response(message, author, channel, guild, this.client);
         }
       }
     }
   }
 
-  isCommand(message, perGuild = false) {
-    let command;
+  getCommand(message, perGuild = false) {
+    let command = null;
     if (perGuild) {
       let args = message.content.split(" ");
       let label = args[0].substring(message.guild.prefix.length);
       label = plugin.aliases.get(label) || label;
       if ((command = this.client.registry.commands.get(label) !== undefined) || (command = this.client.registry.commands.get(label.toLowerCase()) !== undefined && !command.caseSensitive)) {
-        console.log(args.length > 1, "Place");
-        if (args.length > 1) return this.isSubCommand(args.splice(0, 1), command);
+        console.log(args.length > 1, "Place3");
+        if (args.length > 1) return this.getSubCommand(args.splice(0, 1), command);
         return command;
       }
       this.client.registry.plugins.forEach(plugin => {
         if (message.guild.enabledPlugins.indexOf(plugin.id) !== -1) {
           if ((command = plugin.commands.get(label) !== undefined) || ((command = plugin.commands.get(label.toLowerCase()) !== undefined) && !command.caseSensitive)) {
-            if (args.length > 1) return this.isSubCommand(args.splice(0, 1), command);
+            if (args.length > 1) return this.getSubCommand(args.splice(0, 1), command);
             return command;
           }
         }
       });
-      return null;
+      return command;
     } else {
       let args = message.content.split(" ");
-      let label = args[0].substring(message.guild.prefix.length);
+      let label = args[0].substring(this.client.defaults.prefix.length);
 
       label = this.client.registry.aliases.get(label) || label;
       console.log(label);
-      if ((command = this.client.registry.commands.get(label) !== undefined) || ((command = this.client.registry.commands.get(label.toLowerCase()) !== undefined) && !command.caseSensitive)) {
-        console.log(args.length > 1, "Place");
-        if (args.length > 1) return this.isSubCommand(args.splice(0, 1), command);
-        console.log(command);
+      if ((command = this.client.registry.commands.get(label)) !== undefined || ((command = this.client.registry.commands.get(label.toLowerCase())) !== undefined && !command.caseSensitive)) {
+        console.log(args.length > 1, "Place1");
+        if (args.length > 1) return this.getSubCommand(args.splice(0, 1), command);
+        console.log("Command: ", command.id);
         return command;
       }
 
+
+
       this.client.registry.plugins.forEach(plugin => {
         label = plugin.aliases.get(label) || label;
-        if ((command = plugin.commands.get(label) !== undefined) || ((command = plugin.commands.get(label.toLowerCase()) !== undefined) && !command.caseSensitive)) {
-          if (args.length > 1) return this.isSubCommand(args.splice(0, 1), command);
+        if (((command = plugin.commands.get(label)) !== undefined) || (((command = plugin.commands.get(label.toLowerCase())) !== undefined) && !command.caseSensitive)) {
+          console.log(args.length > 1, "Place2");
+          if (args.length > 1) return this.getSubCommand(args.splice(0, 1), command);
+          console.log("Command:", command.id);
           return command;
         }
       });
-      return null;
+      return command;
     }
   }
 
-  isSubCommand(args, command) {
+  getSubCommand(args, command) {
     let id = command.subCommandAliases.get(args[0]) || args[0];
     let subCommand;
-    if ((subCommand = command.subCommands.get(id) !== undefined) || (subCommand = command.subCommands.get(id.toLowerCase()) !== undefined && !subCommand.caseSensitive)) {
-      if (args.length > 1) return this.isSubCommand(args.splice(0, 1), command);
+    if ((subCommand = command.subCommands.get(id)) !== undefined || ((subCommand = command.subCommands.get(id.toLowerCase())) !== undefined && !subCommand.caseSensitive)) {
+      if (args.length > 1) return this.getSubCommand(args.splice(0, 1), command);
       return subCommand;
     }
+    return command;
   }
 
   _handleMessage() {

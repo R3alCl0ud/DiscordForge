@@ -54,14 +54,14 @@ module.exports = class guild extends DiscordJS.Guild {
 
   enablePlugin(plugin) {
     if (plugin != null && typeof plugin == 'string' && this.enabledPlugins.indexOf(plugin) == -1) {
-      console.log(`Enabling plugin: ${plugin}`)
+      this.client.emit('debug', `Enabling plugin: ${plugin}`);
       this.enabledPlugins.push(plugin);
     }
   }
 
   disablePlugin(plugin) {
     if (plugin != null && typeof plugin == 'string' && this.enabledPlugins.indexOf(plugin) != -1) {
-      console.log(`Disabling plugin: ${plugin}`);
+      this.client.emit('debug', `Disabling plugin: ${plugin}`);
       const pos = this.enabledPlugins.indexOf(plugin);
       this.enabledPlugins.splice(pos, 1);
     }

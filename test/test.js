@@ -37,9 +37,7 @@ Client.on('ready', () => {
   console.log(`Channels: ${Client.channels.size}`);
   Client.user.setGame("Self Bot");
 
-  Client.registry.registerCommand(new testCommand(Client.registry));
-  Client.registry.registerCommand(new testFunctionCommand(Client.registry));
-  Client.registry.registerPlugin(new ExamplePlugin(Client));
+
 });
 
 Client.on('error', console.log);
@@ -47,5 +45,9 @@ Client.on('debug', console.log);
 
 Client.login(auth.token).then(() => {
   console.log("Logged in");
+  Client.registry.registerCommand(new testCommand(Client.registry));
+  Client.registry.registerCommand(new testFunctionCommand(Client.registry));
+  Client.registry.registerPlugin(new ExamplePlugin(Client));
+  console.info(Client.registry.plugins.get("testPlugin").comands);
   Client.handleCommands();
 }).catch(console.log);

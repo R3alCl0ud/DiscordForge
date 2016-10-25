@@ -3,7 +3,7 @@ const Forge = require('../');
 class testPlugin extends Forge.Plugin {
   constructor(client) {
     super("testPlugin", "Test Plugin", "R3alCl0ud", "1.0.0", "Plugin for testing, and an example");
-    this.client = client;
+    // this.client = client;
 
     this.registerCommand(new exampleCommand(this));
     this.registerCommand(new exampleDM(this));
@@ -12,7 +12,7 @@ class testPlugin extends Forge.Plugin {
 
 class exampleCommand extends Forge.Command {
   constructor(plugin) {
-    super("example", null, plugin, {guildOnly: true});
+    super("example", null, plugin);
   }
   Message(message, author, channel, guild, client) {
     message.edit("seems to work");

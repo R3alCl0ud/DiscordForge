@@ -1,5 +1,6 @@
 const EventEmitter = require('events').EventEmitter;
 const Command = require('./Command');
+const Collection = require('discord.js').Collection;
 
 class Plugin extends EventEmitter {
 
@@ -25,8 +26,8 @@ class Plugin extends EventEmitter {
       this.version = version;
       this.description = description;
     }
-    this._commands = new Map();
-    this.aliases = new Map();
+    this._commands = new Collection();
+    this.aliases = new Collection();
   }
 
   registerAlias(command, alias) {
@@ -35,7 +36,9 @@ class Plugin extends EventEmitter {
 
   registerCommand(potCommand) {
     // const isCommand = potCommand instanceof Command;
+    // console.log(potCommand)
     if (!this._commands.has(potCommand.id)) this._commands.set(potCommand.id, potCommand);
+    console.log(this.commands.get(potCommand.id).id);
   }
   get commands() {
     return this._commands;
