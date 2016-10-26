@@ -2,7 +2,7 @@ const DiscordJS = require('discord.js');
 const Command = require('./Command');
 
 
-module.exports = class guild extends DiscordJS.Guild {
+class guild extends DiscordJS.Guild {
   constructor(client, data) {
     super(client, data);
 
@@ -34,10 +34,9 @@ module.exports = class guild extends DiscordJS.Guild {
     if (data.commands) {
       data.commands.forEach(command => {
         this.registerCommand(new Command(command.title, command.message, this));
-      })
+      });
     }
     this._prefix = data.prefix || this.client.defaults.prefix;
-    // this.enabledPlugins = data.enabledPlugins ? (data.enabledPlugins.length > 0 ? data.enabledPlugins : ["music", "currency", "help", "config", "custom"]) : ["music", "currency", "help", "config", "custom"];
   }
 
   registerCommand(command) {
@@ -53,14 +52,14 @@ module.exports = class guild extends DiscordJS.Guild {
   }
 
   enablePlugin(plugin) {
-    if (plugin != null && typeof plugin == 'string' && this.enabledPlugins.indexOf(plugin) == -1) {
+    if (plugin !== undefined && typeof plugin === 'string' && this.enabledPlugins.indexOf(plugin) === -1) {
       this.client.emit('debug', `Enabling plugin: ${plugin}`);
       this.enabledPlugins.push(plugin);
     }
   }
 
   disablePlugin(plugin) {
-    if (plugin != null && typeof plugin == 'string' && this.enabledPlugins.indexOf(plugin) != -1) {
+    if (plugin !== undefined && typeof plugin === 'string' && this.enabledPlugins.indexOf(plugin) !== -1) {
       this.client.emit('debug', `Disabling plugin: ${plugin}`);
       const pos = this.enabledPlugins.indexOf(plugin);
       this.enabledPlugins.splice(pos, 1);
@@ -72,7 +71,7 @@ module.exports = class guild extends DiscordJS.Guild {
   }
 
   changePrefix(Prefix) {
-    if (Prefix != null && typeof Prefix == 'string') {
+    if (Prefix !== null && typeof Prefix === 'string') {
       this._setPrefix(Prefix);
     }
   }
@@ -85,3 +84,5 @@ module.exports = class guild extends DiscordJS.Guild {
     return this._commands;
   }
 }
+
+module.exports = guild;

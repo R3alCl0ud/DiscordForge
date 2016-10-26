@@ -1,5 +1,4 @@
 const DiscordJS = require('discord.js');
-const Plugin = require('./Plugin');
 
 /**
  * Options to be passed to used in a command
@@ -15,151 +14,150 @@ const Plugin = require('./Plugin');
  * The Command Object
  */
 class Command {
+  /**
+   * @param {string} id The ID of the command
+   * @param {MessageGenerator|string|falsy} msgGenerator function
+   * @param {Object} parent This can be a guild, plugin. This should be a command if you are registering a SubCommand.
+   * @param {CommandOptions} options Option t be passed to the command
+   */
+  constructor(id, msgGenerator, parent, options = {}) {
+    /**
+     * The Parent of the command
+     * @type {(Plugin|Command|Guild)}
+     */
+    this.Parent = parent;
 
     /**
-     * @param {string} ID The ID of the command
-     * @param {MessageGenerator} function|string|falsy
-     * @param {Object} parent This can be a guild, plugin. This should be a command if you are registering a SubCommand.
-     * @param {CommandOptions} options
+     * The ID of the command
+     * @type {string}
      */
-    constructor(id, msgGenerator, parent, options = {}) {
+    this._id = id;
 
-        /**
-         * The Parent of the command
-         * @type {(Plugin|Command|Guild)}
-         */
-        this.Parent = parent;
+    /**
+     * If the command is case sensitive
+     * @type {boolean}
+     */
+    this.caseSensitive = true;
+    /**
+     * If the command can only be used in DM/GroupDM.
+     * @type {boolean}
+     */
+    this.dmOnly = false;
 
-        /**
-         * The ID of the command
-         * @type {string}
-         */
-        this._id = id;
+    /**
+     * If the command can only be used in a guild channel. Cannot be true is dmOnly is true.
+     * @type {boolean}
+     */
+    this.guildOnly = false;
 
-        /**
-         * If the command is case sensitive
-         * @type {boolean}
-         */
-        this.caseSensitive = true;
-        /**
-         * If the command can only be used in DM/GroupDM.
-         * @type {boolean}
-         */
-        this.dmOnly = false;
+    /**
+     * The description of the command
+     * @type {string}
+     */
+    this.description = 'Default Description';
+    /**
+     * The usage of the command
+     * @type {string}
+     */
+    this.usage = `${this.id}`;
+    /**
+     * The aliases of the command
+     * @type {Array}
+     */
+    this.names = [];
 
-        /**
-         * If the command can only be used in a guild channel. Cannot be true is dmOnly is true.
-         * @type {boolean}
-         */
-        this.guildOnly = false;
-
-        /**
-         * The description of the command
-         * @type {string}
-         */
-        this.description = "Default Description";
-        /**
-         * The usage of the command
-         * @type {string}
-         */
-        this.usage = `${this.id}`;
-        /**
-         * The aliases of the command
-         * @type {Array}
-         */
-        this.names = [];
-
-        /**
-         *
-         * @type {boolean}
-         */
-        this.defaultHelp = true;
+    /**
+     *
+     * @type {boolean}
+     */
+    this.defaultHelp = true;
 
 
-        this._responses = [];
+    this._responses = [];
 
-        if (msgGenerator instanceof Array) {
-            msgGenerator.forEach(message => {
-               this.responses.push(message);
-            });
-        } else if (typeof msgGenerator === 'string') {
-            this.Message = msgGenerator;
-        }
-
-        for (const option of Object.keys(options)) {
-          if (option === 'guildOnly') {
-            if (!this.dmOnly === true) this.guildOnly = false;
-          } else {
-            this[option] = options[option];
-          }
-        }
-
-        this.subCommands = new DiscordJS.Collection();
-        this.subCommandAliases = new DiscordJS.Collection();
-
-
-        if (this.names && this.names instanceof Array) {
-            this._addAlias(this.names);
-        } else if (this.names && typeof this.names === 'string') {
-            this._addAlias(this.names);
-        }
+    if (msgGenerator instanceof Array) {
+      msgGenerator.forEach(message => {
+        this.responses.push(message);
+      });
+    } else if (typeof msgGenerator === 'string') {
+      this.Message = msgGenerator;
     }
 
-    registerSubCommand(CommandOrId, msgGenerator, options) {
-        if (CommandOrId instanceof Command) {
-            this.subCommands.set(CommandOrId.id, CommandOrId);
-        } else if (typeof CommandOrId === 'string'){
-            this.subCommands.set(CommandOrId, new Command(CommandOrId, msgGenerator, this, options));
-        }
+    for (const option of Object.keys(options)) {
+      if (option === 'guildOnly') {
+        if (!this.dmOnly === true) this.guildOnly = false;
+      } else {
+        this[option] = options[option];
+      }
     }
 
+    this.subCommands = new DiscordJS.Collection();
+    this.subCommandAliases = new DiscordJS.Collection();
 
-    setSubAlias(subCommand, alias) {
-        this.subCommandAliases.set(alias, subCommand);
-    }
 
-    _addAlias(alias) {
-        if (this.Parent instanceof Command) {
-            if (alias instanceof Array) {
-                return alias.forEach(name => {
-                    this.Parent.setSubAlias(this.id, this.caseSensitive ? name : name.toLowerCase());
-                    if (this.names.indexOf(name) == -1) this.names.push(this.caseSensitive ? name : name.toLowerCase());
-                });
-            } else if (typeof alias === 'string'){
-                if (this.names.indexOf(alias) == -1) this.names.push(this.caseSensitive ? alias : alias.toLowerCase());
-                return this.Parent.setSubAlias(this.id, this.caseSensitive ? alias : alias.toLowerCase());
-            }
-        }
-        if (alias instanceof Array) {
-            alias.forEach(name => {
-                this.Parent.registerAlias(this._id, this.caseSensitive ? name : name.toLowerCase());
-                if (this.names.indexOf(name) == -1) this.names.push(this.caseSensitive ? name : name.toLowerCase());
-            })
-        } else if (typeof alias === 'string') {
-            this.Parent.registerAlias(this._id, this.caseSensitive ? alias : alias.toLowerCase());
-            if (this.names.indexOf(alias) == -1) this.names.push(this.caseSensitive ? alias : alias.toLowerCase());
-        }
+    if (this.names && this.names instanceof Array) {
+      this._addAlias(this.names);
+    } else if (this.names && typeof this.names === 'string') {
+      this._addAlias(this.names);
     }
+  }
 
-    setAlias(alias) {
-        this._addAlias(alias);
+  registerSubCommand(CommandOrId, msgGenerator, options) {
+    if (CommandOrId instanceof Command) {
+      this.subCommands.set(CommandOrId.id, CommandOrId);
+    } else if (typeof CommandOrId === 'string') {
+      this.subCommands.set(CommandOrId, new Command(CommandOrId, msgGenerator, this, options));
     }
+  }
 
-    get aliases() {
-        if (this.Parent instanceof Command){
-            return this.Parent.subCommandAliases.get(this._id);
-        } else {
-            return this.Parent.aliases.get(this._id);
-        }
-    }
 
-    get id() {
-        return this._id;
-    }
+  setSubAlias(subCommand, alias) {
+    this.subCommandAliases.set(alias, subCommand);
+  }
 
-    get responses() {
-      return this._responses;
+  _addAlias(alias) {
+    if (this.Parent instanceof Command) {
+      if (alias instanceof Array) {
+        return alias.forEach(name => {
+          this.Parent.setSubAlias(this.id, this.caseSensitive ? name : name.toLowerCase());
+          if (this.names.indexOf(name) === -1) this.names.push(this.caseSensitive ? name : name.toLowerCase());
+        });
+      } else if (typeof alias === 'string') {
+        if (this.names.indexOf(alias) === -1) this.names.push(this.caseSensitive ? alias : alias.toLowerCase());
+        return this.Parent.setSubAlias(this.id, this.caseSensitive ? alias : alias.toLowerCase());
+      }
     }
+    if (alias instanceof Array) {
+      alias.forEach(name => {
+        this.Parent.registerAlias(this._id, this.caseSensitive ? name : name.toLowerCase());
+        if (this.names.indexOf(name) === -1) this.names.push(this.caseSensitive ? name : name.toLowerCase());
+      });
+    } else if (typeof alias === 'string') {
+      this.Parent.registerAlias(this._id, this.caseSensitive ? alias : alias.toLowerCase());
+      if (this.names.indexOf(alias) === -1) this.names.push(this.caseSensitive ? alias : alias.toLowerCase());
+    }
+    return new Error('Alias must be a string or an array');
+  }
+
+  setAlias(alias) {
+    this._addAlias(alias);
+  }
+
+  get aliases() {
+    if (this.Parent instanceof Command) {
+      return this.Parent.subCommandAliases.get(this._id);
+    } else {
+      return this.Parent.aliases.get(this._id);
+    }
+  }
+
+  get id() {
+    return this._id;
+  }
+
+  get responses() {
+    return this._responses;
+  }
 }
 
 module.exports = Command;
