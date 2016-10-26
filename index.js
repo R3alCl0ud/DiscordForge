@@ -12,8 +12,7 @@ module.exports = {
   hmsToms: require('./src/util').timeToMs,
 
   timeToMs: require('./src/util').timeToMs,
-  isRole: require('./src/util').isRole,
-  isRoleServer: require('./src/util').isRoleServer,
+  hasRole: require('./src/util').hasRole,
   hasPerms: require('./src/util').hasPerms,
 
   ForgeClient: require('./src/client/ForgeClient'),

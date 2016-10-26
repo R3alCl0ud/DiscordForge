@@ -26,19 +26,10 @@ exports.timeToMs = function(time) {
     return ms;
 }
 
-exports.isRole = function(msg, usr, role) {
-    var roles = msg.channel.server.rolesOfUser(usr);
-    for (var i = 0; i < roles.length; i++) {
-        if (roles[i].name.toLowerCase() == role.toLowerCase())
-            return 1;
-    }
-    return 0;
-}
-
-exports.isRoleServer = function(user, role) {
+exports.hasRole = function(user, role) {
 
     if (role == "@everyone") return true;
-    
+
     const roles = user.roles.array()
 
     for (var i = 0; i < roles.length; i++) {
@@ -61,11 +52,11 @@ exports.hasPerms = function(user, permission) {
 function getSubcommands(command, levels) {
     let tabs = "    ";
     let subs = [];
-    
+
     for (let level = 0; level < levels--; level++) {
         tabs += "    ";
     }
-    
+
     if (command.subCommands.size > 0) {
         command.subCommands.forEach(sub => {
             subs.push(getSubcommands(sub, levels));

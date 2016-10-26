@@ -9,7 +9,6 @@ class commandHandler {
   }
 
   handleMessage(message, author, channel, guild) {
-    console.log("Message?");
 
     if (author.bot) return;
     if (this.client.options.selfBot === true && author.id !== this.client.user.id) return;
@@ -39,6 +38,8 @@ class commandHandler {
             return response(message, author, channel, guild, this.client);
           }
         }
+      } else {
+        return this.client.emit('nonCommand', message);
       }
     }
   }
@@ -62,6 +63,8 @@ class commandHandler {
           response(message, author, group, this.client);
         }
       }
+    } else {
+      return this.client.emit('nonCommand', message);
     }
   }
 
@@ -84,6 +87,8 @@ class commandHandler {
           response(message, author, dmChannel, this.client);
         }
       }
+    } else {
+      return this.client.emit('nonCommand', message);
     }
   }
 
@@ -104,6 +109,8 @@ class commandHandler {
           return response(message, author, channel, guild, this.client);
         }
       }
+    } else {
+      return this.client.emit('nonCommand', message);
     }
   }
 
@@ -139,9 +146,7 @@ class commandHandler {
         console.log("Command: ", command.id);
         return command;
       }
-
-
-
+      
       this.client.registry.plugins.forEach(plugin => {
         label = plugin.aliases.get(label) || label;
         if (((command = plugin.commands.get(label)) !== undefined) || (((command = plugin.commands.get(label.toLowerCase())) !== undefined) && !command.caseSensitive)) {

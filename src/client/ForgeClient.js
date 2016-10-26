@@ -45,9 +45,13 @@ class ForgeClient extends DiscordJS.Client {
 
   }
 
+  loadPlugins() {
+    this.registry.plugins.forEach(plugin => plugin.emit('load', this));
+  }
+
   load() {
-      // this.startPlugins();
-      this.listen();
+      this.loadPlugins();
+      this.handleCommands();
   }
   /**
    * Depricated
