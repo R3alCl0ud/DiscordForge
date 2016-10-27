@@ -32,7 +32,7 @@ class ForgeClient extends DiscordJS.Client {
      * Default Options to use
      * @type {ClientDefaults}
      */
-    this.defaults = { prefix: '!', selfBot: false };
+    this.defaults = { prefix: '!', selfBot: false, defaultHelp: true };
     this.selfBot = this.defaults.selfBot;
     if (options.prefix !== null) this.defaults.prefix = options.prefix;
     if (options.selfBot !== null) this.selfBot = options.selfBot;

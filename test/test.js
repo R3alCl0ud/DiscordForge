@@ -27,7 +27,6 @@ class evalCommand extends Forge.Command {
 class testFunctionCommand extends Forge.Command {
   constructor(commandRegistry) {
     super("testFunction", null, commandRegistry);
-
   }
   message(message, author, channel, guild, client) {
       channel.sendMessage(`Hey ${author.username}, Does this work?`);
