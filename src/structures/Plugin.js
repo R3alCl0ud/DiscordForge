@@ -1,7 +1,11 @@
 const EventEmitter = require('events').EventEmitter;
-// const Command = require('./Command');
+const Command = require('./Command');
 const Collection = require('discord.js').Collection;
 
+/**
+ * The starting point for making a plugin
+ * @extends {EventEmitter}
+ */
 class Plugin extends EventEmitter {
 
   /**
@@ -29,17 +33,31 @@ class Plugin extends EventEmitter {
     this._commands = new Collection();
     this.aliases = new Collection();
   }
-
+  /**
+   *
+   * @param {Command} command The command to set an alias for
+   * @param {string} alias The alias to be set
+   */
   registerAlias(command, alias) {
-    this.aliases.set(alias, command);
+    this.aliases.set(alias, command.id);
+  }
+  /**
+   * Registers a command to the plugin
+   * @param {Command} command The command to register
+   */
+  registerCommand(command) {
+    if ((command instanceof Command) && !this._commands.has(command.id)) this._commands.set(command.id, command);
+  }
+  /**
+   * Removes a command from the guild
+   * @param {Command} command The command to remove
+   */
+  removeCommand(command) {
+    if ((command instanceof Command) && this._commands.has(command.id)) {
+      this._commands.delete(command.id);
+    }
   }
 
-  registerCommand(potCommand) {
-    // const isCommand = potCommand instanceof Command;
-    // console.log(potCommand)
-    if (!this._commands.has(potCommand.id)) this._commands.set(potCommand.id, potCommand);
-    // console.log(this.commands.get(potCommand.id).id);
-  }
   get commands() {
     return this._commands;
   }

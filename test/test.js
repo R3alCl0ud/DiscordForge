@@ -11,12 +11,25 @@ class testCommand extends Forge.Command {
   }
 
 }
+class evalCommand extends Forge.Command {
+  constructor(registry) {
+    super("eval", null, registry);
+  }
+  message(message, author, channel, guild, client) {
+    try {
+      const com = eval(message.content.split(' ').slice(1).join(' '));
+      channel.sendMessage('```\n' + com + '```');
+    } catch (e) {
+      channel.sendMessage('```\n' + e + '```');
+    }
+  }
+}
 class testFunctionCommand extends Forge.Command {
   constructor(commandRegistry) {
     super("testFunction", null, commandRegistry);
 
   }
-  Message(message, author, channel, guild, client) {
+  message(message, author, channel, guild, client) {
       channel.sendMessage(`Hey ${author.username}, Does this work?`);
       message.delete();
   }
@@ -47,6 +60,7 @@ Client.login(auth.token).then(() => {
   console.log("Logged in");
   Client.registry.registerCommand(new testCommand(Client.registry));
   Client.registry.registerCommand(new testFunctionCommand(Client.registry));
+  Client.registry.registerCommand(new evalCommand(Client.registry));
   Client.registry.registerPlugin(new ExamplePlugin(Client));
   console.info(Client.registry.plugins.get("testPlugin").comands);
   Client.handleCommands();

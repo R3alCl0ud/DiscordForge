@@ -2,7 +2,7 @@
  *  This is the chat handling class file. This is the command running code. Very finiky
  *
  */
-class commandHandler {
+class CommandHandler {
   constructor(client) {
     this.client = client;
   }
@@ -19,7 +19,7 @@ class commandHandler {
       if (cmdArgs[0].substring(0, this.client.defaults.prefix.length) !== this.client.defaults.prefix) return false;
 
       const command = this.getCommand(message);
-      if (command !== null) {
+      if (command !== undefined) {
         if (command.dmOnly === true) return false;
         if (typeof command.message === 'string') {
           channel.sendMessage(command.message);
@@ -35,6 +35,10 @@ class commandHandler {
         }
       }
     }
+    /**
+     * emits when a normal noncommand message is received
+     * @event ForgeClient#nonCommand
+     */
     return this.client.emit('nonCommand', message);
   }
   handleGroupDM(message, author, group) {
@@ -102,7 +106,7 @@ class commandHandler {
   }
 
   getCommand(message, perGuild = false) {
-    let command = null;
+    let command;
     if (perGuild) {
       let args = message.content.split(' ');
       let label = args[0].substring(message.guild.prefix.length);
@@ -124,14 +128,17 @@ class commandHandler {
 
       label = this.client.registry.aliases.get(label) || label;
       if ((command = this.client.registry.commands.get(label)) !== undefined || ((command = this.client.registry.commands.get(label.toLowerCase())) !== undefined && !command.caseSensitive)) {
-        if (args.length > 1) command = this.getSubCommand(args.splice(0, 1), command) || command;
+        if (args.length > 1) return this.getSubCommand(args.splice(0, 1), command);
+        return command;
       }
 
       this.client.registry.plugins.forEach(plugin => {
         label = plugin.aliases.get(label) || label;
         if (((command = plugin.commands.get(label)) !== undefined) || (((command = plugin.commands.get(label.toLowerCase())) !== undefined) && !command.caseSensitive)) {
-          if (args.length > 1) command = this.getSubCommand(args.splice(0, 1), command) || command;
+          if (args.length > 1) return this.getSubCommand(args.splice(0, 1), command);
+          return command;
         }
+        return undefined;
       });
       return command;
     }
@@ -140,7 +147,7 @@ class commandHandler {
   getSubCommand(args, command) {
     let id = command.subCommandAliases.get(args[0]) || args[0];
     let subCommand;
-    if ((subCommand = command.subCommands.get(id)) !== undefined || ((subCommand = command.subCommands.get(id.toLowerCase())) !== undefined && !subCommand.caseSensitive)) {
+    if (((subCommand = command.subCommands.get(id)) !== undefined) || ((subCommand = command.subCommands.get(id.toLowerCase())) !== undefined && !subCommand.caseSensitive)) {
       if (args.length > 1) return this.getSubCommand(args.splice(0, 1), command);
       return subCommand;
     }
@@ -149,4 +156,4 @@ class commandHandler {
 }
 
 
-module.exports = commandHandler;
+module.exports = CommandHandler;

@@ -1,7 +1,9 @@
 const DiscordJS = require('discord.js');
 const Command = require('./Command');
 
-
+/** Custom guild class
+ * @extends {DiscordJS.Guild}
+ */
 class guild extends DiscordJS.Guild {
   constructor(client, data) {
     super(client, data);
@@ -38,26 +40,38 @@ class guild extends DiscordJS.Guild {
     }
     this._prefix = data.prefix || this.client.defaults.prefix;
   }
-
+  /**
+   * Registers a command to the guild
+   * @param {Command} command The command to register
+   */
   registerCommand(command) {
     if (command instanceof Command && !this._commands.has(command.id)) {
       this._commands.set(command.id, command);
     }
   }
-
+  /**
+   * Removes a command from the guild
+   * @param {Command} command The command to remove
+   */
   removeCommand(command) {
-    if (this._commands.has(command)) {
-      this._commands.delete(command);
+    if ((command instanceof Command) && this._commands.has(command.id)) {
+      this._commands.delete(command.id);
     }
   }
-
+  /**
+   * Enables a plugin
+   * @param {string} plugin the id of the plugin to disable
+   */
   enablePlugin(plugin) {
     if (plugin !== undefined && typeof plugin === 'string' && this.enabledPlugins.indexOf(plugin) === -1) {
       this.client.emit('debug', `Enabling plugin: ${plugin}`);
       this.enabledPlugins.push(plugin);
     }
   }
-
+  /**
+   * Disables a plugin
+   * @param {string} plugin the id of the plugin to disable
+   */
   disablePlugin(plugin) {
     if (plugin !== undefined && typeof plugin === 'string' && this.enabledPlugins.indexOf(plugin) !== -1) {
       this.client.emit('debug', `Disabling plugin: ${plugin}`);

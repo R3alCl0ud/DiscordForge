@@ -1,5 +1,5 @@
 # Discord-Forge
-
+A highly extensible command client for discord.js
 
 # Example Usage
 

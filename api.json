@@ -1,0 +1,864 @@
+[
+  {
+    "id": "Command()",
+    "longname": "Command",
+    "name": "Command",
+    "kind": "constructor",
+    "memberof": "Command",
+    "params": [
+      {
+        "type": {
+          "names": [
+            "string"
+          ]
+        },
+        "description": "The ID of the command",
+        "name": "id"
+      },
+      {
+        "type": {
+          "names": [
+            "MessageGenerator",
+            "string",
+            "falsy"
+          ]
+        },
+        "description": "function",
+        "name": "msgGenerator"
+      },
+      {
+        "type": {
+          "names": [
+            "Object"
+          ]
+        },
+        "description": "This can be a guild, plugin. This should be a command if you are registering a SubCommand.",
+        "name": "parent"
+      },
+      {
+        "type": {
+          "names": [
+            "CommandOptions"
+          ]
+        },
+        "description": "Option t be passed to the command",
+        "name": "options"
+      }
+    ],
+    "order": 10
+  },
+  {
+    "id": "Plugin()",
+    "longname": "Plugin",
+    "name": "Plugin",
+    "kind": "constructor",
+    "memberof": "Plugin",
+    "params": [
+      {
+        "type": {
+          "names": [
+            "string",
+            "object"
+          ]
+        },
+        "optional": true,
+        "defaultvalue": "noID",
+        "description": "The ID of the Plugin",
+        "name": "id"
+      },
+      {
+        "type": {
+          "names": [
+            "string"
+          ]
+        },
+        "optional": true,
+        "defaultvalue": "No Name",
+        "description": "The name of the Plugin",
+        "name": "name"
+      },
+      {
+        "type": {
+          "names": [
+            "string"
+          ]
+        },
+        "optional": true,
+        "defaultvalue": "Anon",
+        "description": "The author of the plugin",
+        "name": "author"
+      },
+      {
+        "type": {
+          "names": [
+            "string"
+          ]
+        },
+        "optional": true,
+        "defaultvalue": "0.0.0",
+        "description": "The version of the plugin",
+        "name": "version"
+      },
+      {
+        "type": {
+          "names": [
+            "string"
+          ]
+        },
+        "optional": true,
+        "description": "The description of the plugin",
+        "name": "description",
+        "defaultvalue": "No description"
+      }
+    ],
+    "order": 28
+  },
+  {
+    "id": "CommandHandler",
+    "longname": "CommandHandler",
+    "name": "CommandHandler",
+    "kind": "class",
+    "scope": "global",
+    "description": "This is the chat handling class file. This is the command running code. Very finiky",
+    "meta": {
+      "lineno": 5,
+      "filename": "CommandHandler.js",
+      "path": "/mnt/c/Users/Perry/Documents/GitHub/Discord-Forge/src/client"
+    },
+    "order": 0
+  },
+  {
+    "id": "ForgeRegistry",
+    "longname": "ForgeRegistry",
+    "name": "ForgeRegistry",
+    "kind": "class",
+    "scope": "global",
+    "description": "This is the ForgeRegistry Register all the stuff to it",
+    "meta": {
+      "lineno": 8,
+      "filename": "ForgeRegistry.js",
+      "path": "/mnt/c/Users/Perry/Documents/GitHub/Discord-Forge/src/client"
+    },
+    "order": 7
+  },
+  {
+    "id": "Command",
+    "longname": "Command",
+    "name": "Command",
+    "kind": "class",
+    "scope": "global",
+    "description": "The Command Object",
+    "meta": {
+      "lineno": 16,
+      "filename": "Command.js",
+      "path": "/mnt/c/Users/Perry/Documents/GitHub/Discord-Forge/src/structures"
+    },
+    "order": 9
+  },
+  {
+    "id": "guild",
+    "longname": "guild",
+    "name": "guild",
+    "kind": "class",
+    "scope": "global",
+    "augments": [
+      "DiscordJS.Guild"
+    ],
+    "description": "Custom guild class",
+    "meta": {
+      "lineno": 7,
+      "filename": "Guild.js",
+      "path": "/mnt/c/Users/Perry/Documents/GitHub/Discord-Forge/src/structures"
+    },
+    "order": 20
+  },
+  {
+    "id": "Plugin",
+    "longname": "Plugin",
+    "name": "Plugin",
+    "kind": "class",
+    "scope": "global",
+    "augments": [
+      "EventEmitter"
+    ],
+    "description": "The starting point for making a plugin",
+    "meta": {
+      "lineno": 9,
+      "filename": "Plugin.js",
+      "path": "/mnt/c/Users/Perry/Documents/GitHub/Discord-Forge/src/structures"
+    },
+    "order": 27
+  },
+  {
+    "id": "ClientDefaults",
+    "longname": "ClientDefaults",
+    "name": "ClientDefaults",
+    "kind": "typedef",
+    "scope": "global",
+    "augments": [
+      "DiscordJS.Client"
+    ],
+    "description": "Options to be passed to used in a command",
+    "type": {
+      "names": [
+        "Object"
+      ]
+    },
+    "properties": [
+      {
+        "type": {
+          "names": [
+            "string"
+          ]
+        },
+        "optional": true,
+        "defaultvalue": "!",
+        "description": "The default prefix to use for a guild",
+        "name": "prefix"
+      },
+      {
+        "type": {
+          "names": [
+            "boolean"
+          ]
+        },
+        "optional": true,
+        "defaultvalue": false,
+        "description": "Whether or not the client is a selfbot.",
+        "name": "selfBot"
+      },
+      {
+        "type": {
+          "names": [
+            "boolean"
+          ]
+        },
+        "optional": true,
+        "defaultvalue": false,
+        "description": "Whether or not the client should use per guild settings.",
+        "name": "perGuild"
+      },
+      {
+        "type": {
+          "names": [
+            "function"
+          ]
+        },
+        "optional": true,
+        "defaultvalue": false,
+        "description": "Whether or not the client is a selfbot.",
+        "name": "selfBot"
+      }
+    ],
+    "meta": {
+      "lineno": 7,
+      "filename": "ForgeClient.js",
+      "path": "/mnt/c/Users/Perry/Documents/GitHub/Discord-Forge/src/client"
+    },
+    "order": 2
+  },
+  {
+    "id": "CommandOptions",
+    "longname": "CommandOptions",
+    "name": "CommandOptions",
+    "kind": "typedef",
+    "scope": "global",
+    "description": "Options to be passed to used in a command",
+    "type": {
+      "names": [
+        "Object"
+      ]
+    },
+    "properties": [
+      {
+        "type": {
+          "names": [
+            "boolean"
+          ]
+        },
+        "optional": true,
+        "defaultvalue": true,
+        "description": "Whether or not the command should be case sensitive",
+        "name": "caseSensitive"
+      },
+      {
+        "type": {
+          "names": [
+            "boolean"
+          ]
+        },
+        "optional": true,
+        "defaultvalue": false,
+        "description": "Whether or not the command can only be ran in direct messages only",
+        "name": "dmOnly"
+      },
+      {
+        "type": {
+          "names": [
+            "boolean"
+          ]
+        },
+        "optional": true,
+        "defaultvalue": false,
+        "description": "Whether or not the command can only be ran in a guild text channel. Cannot be true if dmOnly is true",
+        "name": "guildOnly"
+      },
+      {
+        "type": {
+          "names": [
+            "string"
+          ]
+        },
+        "optional": true,
+        "defaultvalue": "Default Description",
+        "description": "The description of the command",
+        "name": "description"
+      },
+      {
+        "type": {
+          "names": [
+            "string"
+          ]
+        },
+        "optional": true,
+        "defaultvalue": "command ID",
+        "description": "The usage for the command",
+        "name": "usage"
+      }
+    ],
+    "meta": {
+      "lineno": 3,
+      "filename": "Command.js",
+      "path": "/mnt/c/Users/Perry/Documents/GitHub/Discord-Forge/src/structures"
+    },
+    "order": 8
+  },
+  {
+    "id": "ForgeClient#registry",
+    "longname": "ForgeClient#registry",
+    "name": "registry",
+    "kind": "member",
+    "scope": "instance",
+    "description": "Client plugin and command registry",
+    "memberof": "ForgeClient",
+    "type": {
+      "names": [
+        "ForgeRegistry"
+      ]
+    },
+    "meta": {
+      "lineno": 25,
+      "filename": "ForgeClient.js",
+      "path": "/mnt/c/Users/Perry/Documents/GitHub/Discord-Forge/src/client"
+    },
+    "order": 3
+  },
+  {
+    "id": "ForgeClient#defaults",
+    "longname": "ForgeClient#defaults",
+    "name": "defaults",
+    "kind": "member",
+    "scope": "instance",
+    "description": "Default Options to use",
+    "memberof": "ForgeClient",
+    "type": {
+      "names": [
+        "ClientDefaults"
+      ]
+    },
+    "meta": {
+      "lineno": 35,
+      "filename": "ForgeClient.js",
+      "path": "/mnt/c/Users/Perry/Documents/GitHub/Discord-Forge/src/client"
+    },
+    "order": 4
+  },
+  {
+    "id": "Command#Parent",
+    "longname": "Command#Parent",
+    "name": "Parent",
+    "kind": "member",
+    "scope": "instance",
+    "description": "The Parent of the command",
+    "memberof": "Command",
+    "type": {
+      "names": [
+        "Plugin",
+        "Command",
+        "Guild"
+      ]
+    },
+    "meta": {
+      "lineno": 28,
+      "filename": "Command.js",
+      "path": "/mnt/c/Users/Perry/Documents/GitHub/Discord-Forge/src/structures"
+    },
+    "order": 11
+  },
+  {
+    "id": "Command#_id",
+    "longname": "Command#_id",
+    "name": "_id",
+    "kind": "member",
+    "scope": "instance",
+    "description": "The ID of the command",
+    "memberof": "Command",
+    "type": {
+      "names": [
+        "string"
+      ]
+    },
+    "meta": {
+      "lineno": 34,
+      "filename": "Command.js",
+      "path": "/mnt/c/Users/Perry/Documents/GitHub/Discord-Forge/src/structures"
+    },
+    "order": 12
+  },
+  {
+    "id": "Command#caseSensitive",
+    "longname": "Command#caseSensitive",
+    "name": "caseSensitive",
+    "kind": "member",
+    "scope": "instance",
+    "description": "If the command is case sensitive",
+    "memberof": "Command",
+    "type": {
+      "names": [
+        "boolean"
+      ]
+    },
+    "meta": {
+      "lineno": 40,
+      "filename": "Command.js",
+      "path": "/mnt/c/Users/Perry/Documents/GitHub/Discord-Forge/src/structures"
+    },
+    "order": 13
+  },
+  {
+    "id": "Command#dmOnly",
+    "longname": "Command#dmOnly",
+    "name": "dmOnly",
+    "kind": "member",
+    "scope": "instance",
+    "description": "If the command can only be used in DM/GroupDM.",
+    "memberof": "Command",
+    "type": {
+      "names": [
+        "boolean"
+      ]
+    },
+    "meta": {
+      "lineno": 45,
+      "filename": "Command.js",
+      "path": "/mnt/c/Users/Perry/Documents/GitHub/Discord-Forge/src/structures"
+    },
+    "order": 14
+  },
+  {
+    "id": "Command#guildOnly",
+    "longname": "Command#guildOnly",
+    "name": "guildOnly",
+    "kind": "member",
+    "scope": "instance",
+    "description": "If the command can only be used in a guild channel. Cannot be true is dmOnly is true.",
+    "memberof": "Command",
+    "type": {
+      "names": [
+        "boolean"
+      ]
+    },
+    "meta": {
+      "lineno": 51,
+      "filename": "Command.js",
+      "path": "/mnt/c/Users/Perry/Documents/GitHub/Discord-Forge/src/structures"
+    },
+    "order": 15
+  },
+  {
+    "id": "Command#description",
+    "longname": "Command#description",
+    "name": "description",
+    "kind": "member",
+    "scope": "instance",
+    "description": "The description of the command",
+    "memberof": "Command",
+    "type": {
+      "names": [
+        "string"
+      ]
+    },
+    "meta": {
+      "lineno": 57,
+      "filename": "Command.js",
+      "path": "/mnt/c/Users/Perry/Documents/GitHub/Discord-Forge/src/structures"
+    },
+    "order": 16
+  },
+  {
+    "id": "Command#usage",
+    "longname": "Command#usage",
+    "name": "usage",
+    "kind": "member",
+    "scope": "instance",
+    "description": "The usage of the command",
+    "memberof": "Command",
+    "type": {
+      "names": [
+        "string"
+      ]
+    },
+    "meta": {
+      "lineno": 62,
+      "filename": "Command.js",
+      "path": "/mnt/c/Users/Perry/Documents/GitHub/Discord-Forge/src/structures"
+    },
+    "order": 17
+  },
+  {
+    "id": "Command#names",
+    "longname": "Command#names",
+    "name": "names",
+    "kind": "member",
+    "scope": "instance",
+    "description": "The aliases of the command",
+    "memberof": "Command",
+    "type": {
+      "names": [
+        "Array"
+      ]
+    },
+    "meta": {
+      "lineno": 67,
+      "filename": "Command.js",
+      "path": "/mnt/c/Users/Perry/Documents/GitHub/Discord-Forge/src/structures"
+    },
+    "order": 18
+  },
+  {
+    "id": "Command#defaultHelp",
+    "longname": "Command#defaultHelp",
+    "name": "defaultHelp",
+    "kind": "member",
+    "scope": "instance",
+    "memberof": "Command",
+    "type": {
+      "names": [
+        "boolean"
+      ]
+    },
+    "meta": {
+      "lineno": 73,
+      "filename": "Command.js",
+      "path": "/mnt/c/Users/Perry/Documents/GitHub/Discord-Forge/src/structures"
+    },
+    "order": 19
+  },
+  {
+    "id": "guild#available",
+    "longname": "guild#available",
+    "name": "available",
+    "kind": "member",
+    "scope": "instance",
+    "description": "Whether the Guild is available to access. If it is not available, it indicates a server outage.",
+    "memberof": "guild",
+    "type": {
+      "names": [
+        "boolean"
+      ]
+    },
+    "meta": {
+      "lineno": 20,
+      "filename": "Guild.js",
+      "path": "/mnt/c/Users/Perry/Documents/GitHub/Discord-Forge/src/structures"
+    },
+    "order": 21
+  },
+  {
+    "id": "guild#id",
+    "longname": "guild#id",
+    "name": "id",
+    "kind": "member",
+    "scope": "instance",
+    "description": "The Unique ID of the Guild, useful for comparisons.",
+    "memberof": "guild",
+    "type": {
+      "names": [
+        "string"
+      ]
+    },
+    "meta": {
+      "lineno": 26,
+      "filename": "Guild.js",
+      "path": "/mnt/c/Users/Perry/Documents/GitHub/Discord-Forge/src/structures"
+    },
+    "order": 22
+  },
+  {
+    "id": "ForgeManager#resolveGuild",
+    "longname": "ForgeManager#resolveGuild",
+    "name": "resolveGuild",
+    "kind": "function",
+    "scope": "instance",
+    "description": "Resolves a GuildResolvable to a Guild object",
+    "memberof": "ForgeManager",
+    "params": [
+      {
+        "type": {
+          "names": [
+            "GuildResolvable"
+          ]
+        },
+        "description": "The GuildResolvable to identify",
+        "name": "guild"
+      }
+    ],
+    "returns": [
+      {
+        "type": {
+          "names": [
+            "Guild"
+          ]
+        },
+        "nullable": true
+      }
+    ],
+    "meta": {
+      "lineno": 37,
+      "filename": "ForgeManager.js",
+      "path": "/mnt/c/Users/Perry/Documents/GitHub/Discord-Forge/src/client"
+    },
+    "order": 6
+  },
+  {
+    "id": "guild#registerCommand",
+    "longname": "guild#registerCommand",
+    "name": "registerCommand",
+    "kind": "function",
+    "scope": "instance",
+    "description": "Registers a command to the guild",
+    "memberof": "guild",
+    "params": [
+      {
+        "type": {
+          "names": [
+            "Command"
+          ]
+        },
+        "description": "The command to register",
+        "name": "command"
+      }
+    ],
+    "meta": {
+      "lineno": 47,
+      "filename": "Guild.js",
+      "path": "/mnt/c/Users/Perry/Documents/GitHub/Discord-Forge/src/structures"
+    },
+    "order": 23
+  },
+  {
+    "id": "guild#removeCommand",
+    "longname": "guild#removeCommand",
+    "name": "removeCommand",
+    "kind": "function",
+    "scope": "instance",
+    "description": "Removes a command from the guild",
+    "memberof": "guild",
+    "params": [
+      {
+        "type": {
+          "names": [
+            "Command"
+          ]
+        },
+        "description": "The command to remove",
+        "name": "command"
+      }
+    ],
+    "meta": {
+      "lineno": 56,
+      "filename": "Guild.js",
+      "path": "/mnt/c/Users/Perry/Documents/GitHub/Discord-Forge/src/structures"
+    },
+    "order": 24
+  },
+  {
+    "id": "guild#enablePlugin",
+    "longname": "guild#enablePlugin",
+    "name": "enablePlugin",
+    "kind": "function",
+    "scope": "instance",
+    "description": "Enables a plugin",
+    "memberof": "guild",
+    "params": [
+      {
+        "type": {
+          "names": [
+            "string"
+          ]
+        },
+        "description": "the id of the plugin to disable",
+        "name": "plugin"
+      }
+    ],
+    "meta": {
+      "lineno": 65,
+      "filename": "Guild.js",
+      "path": "/mnt/c/Users/Perry/Documents/GitHub/Discord-Forge/src/structures"
+    },
+    "order": 25
+  },
+  {
+    "id": "guild#disablePlugin",
+    "longname": "guild#disablePlugin",
+    "name": "disablePlugin",
+    "kind": "function",
+    "scope": "instance",
+    "description": "Disables a plugin",
+    "memberof": "guild",
+    "params": [
+      {
+        "type": {
+          "names": [
+            "string"
+          ]
+        },
+        "description": "the id of the plugin to disable",
+        "name": "plugin"
+      }
+    ],
+    "meta": {
+      "lineno": 75,
+      "filename": "Guild.js",
+      "path": "/mnt/c/Users/Perry/Documents/GitHub/Discord-Forge/src/structures"
+    },
+    "order": 26
+  },
+  {
+    "id": "Plugin#registerAlias",
+    "longname": "Plugin#registerAlias",
+    "name": "registerAlias",
+    "kind": "function",
+    "scope": "instance",
+    "memberof": "Plugin",
+    "params": [
+      {
+        "type": {
+          "names": [
+            "Command"
+          ]
+        },
+        "description": "The command to set an alias for",
+        "name": "command"
+      },
+      {
+        "type": {
+          "names": [
+            "string"
+          ]
+        },
+        "description": "The alias to be set",
+        "name": "alias"
+      }
+    ],
+    "meta": {
+      "lineno": 41,
+      "filename": "Plugin.js",
+      "path": "/mnt/c/Users/Perry/Documents/GitHub/Discord-Forge/src/structures"
+    },
+    "order": 29
+  },
+  {
+    "id": "Plugin#registerCommand",
+    "longname": "Plugin#registerCommand",
+    "name": "registerCommand",
+    "kind": "function",
+    "scope": "instance",
+    "description": "Registers a command to the plugin",
+    "memberof": "Plugin",
+    "params": [
+      {
+        "type": {
+          "names": [
+            "Command"
+          ]
+        },
+        "description": "The command to register",
+        "name": "command"
+      }
+    ],
+    "meta": {
+      "lineno": 48,
+      "filename": "Plugin.js",
+      "path": "/mnt/c/Users/Perry/Documents/GitHub/Discord-Forge/src/structures"
+    },
+    "order": 30
+  },
+  {
+    "id": "Plugin#removeCommand",
+    "longname": "Plugin#removeCommand",
+    "name": "removeCommand",
+    "kind": "function",
+    "scope": "instance",
+    "description": "Removes a command from the guild",
+    "memberof": "Plugin",
+    "params": [
+      {
+        "type": {
+          "names": [
+            "Command"
+          ]
+        },
+        "description": "The command to remove",
+        "name": "command"
+      }
+    ],
+    "meta": {
+      "lineno": 55,
+      "filename": "Plugin.js",
+      "path": "/mnt/c/Users/Perry/Documents/GitHub/Discord-Forge/src/structures"
+    },
+    "order": 31
+  },
+  {
+    "id": "ForgeClient#event:nonCommand",
+    "longname": "ForgeClient#event:nonCommand",
+    "name": "nonCommand",
+    "kind": "event",
+    "scope": "instance",
+    "description": "emits when a normal noncommand message is received",
+    "memberof": "ForgeClient",
+    "meta": {
+      "lineno": 38,
+      "filename": "CommandHandler.js",
+      "path": "/mnt/c/Users/Perry/Documents/GitHub/Discord-Forge/src/client"
+    },
+    "order": 1
+  },
+  {
+    "id": "Client#event:guildCreate",
+    "longname": "Client#event:guildCreate",
+    "name": "guildCreate",
+    "kind": "event",
+    "scope": "instance",
+    "description": "Emitted whenever the client joins a Guild.",
+    "memberof": "Client",
+    "params": [
+      {
+        "type": {
+          "names": [
+            "Guild"
+          ]
+        },
+        "description": "The created guild",
+        "name": "guild"
+      }
+    ],
+    "meta": {
+      "lineno": 18,
+      "filename": "ForgeManager.js",
+      "path": "/mnt/c/Users/Perry/Documents/GitHub/Discord-Forge/src/client"
+    },
+    "order": 5
+  }
+]

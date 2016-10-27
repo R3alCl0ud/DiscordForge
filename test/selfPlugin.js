@@ -14,7 +14,7 @@ class exampleCommand extends Forge.Command {
   constructor(plugin) {
     super("example", null, plugin);
   }
-  Message(message, author, channel, guild, client) {
+  message(message, author, channel, guild, client) {
     message.edit("seems to work");
   }
 }
@@ -23,7 +23,7 @@ class exampleDM extends Forge.Command {
   constructor(plugin) {
     super("dmTest", null, plugin, {dmOnly: true});
   }
-  Message(message, author, channel, client) {
+  message(message, author, channel, client) {
     message.edit("This was a test");
   }
 }

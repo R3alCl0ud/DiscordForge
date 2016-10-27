@@ -11,6 +11,7 @@ const ForgeManager = require('./ForgeManager');
  * @property {boolean} [selfBot=false] Whether or not the client is a selfbot.
  * @property {boolean} [perGuild=false] Whether or not the client should use per guild settings.
  * @property {function} [selfBot=false] Whether or not the client is a selfbot.
+ * @extends {DiscordJS.Client}
  */
 class ForgeClient extends DiscordJS.Client {
   constructor(options = {}) {

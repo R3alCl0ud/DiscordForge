@@ -15,7 +15,7 @@
   },
   "scripts": {
     "test": "eslint src/",
-    "docs": "jsdoc2md --json src/*.js src/*/*.js src/*/*/*.js > api.json && jsdoc2md src/*.js src/*/*.js src/*/*/*.js > api.md"
+    "docs": "jsdoc2md --json src/*.js src/*/*.js > api.json"
   },
   "repository": {
     "type": "git",

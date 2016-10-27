@@ -23,3 +23,23 @@ module.exports = {
   Guild: require('./src/structures/Guild')
 
 }
+
+/**
+ * @external DiscordJS.Client
+ * @see {@link http://hydrabolt.github.io/discord.js/#!/docs/tag/indev/class/Client}
+ */
+
+/**
+ * @external DiscordJS.Guild
+ * @see {@link http://hydrabolt.github.io/discord.js/#!/docs/tag/indev/class/Guild}
+ */
+
+/**
+ * @external DiscordJS.ClientOptions
+ * @see {@link http://hydrabolt.github.io/discord.js/#!/docs/tag/indev/typedef/ClientOptions}
+ */
+
+/**
+ * @external DiscordJS.Collection
+ * @see {@link http://hydrabolt.github.io/discord.js/#!/docs/tag/indev/class/Collection}
+ */
