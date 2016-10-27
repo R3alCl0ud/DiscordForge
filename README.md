@@ -1,6 +1,6 @@
 # Discord-Forge
 A highly extensible command client for discord.js
-
+[![NPM](https://nodei.co/npm/DiscordForge.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/DiscordForge/)
 # Example Usage
 
 ```js

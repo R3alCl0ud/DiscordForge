@@ -36,15 +36,11 @@ class ForgeClient extends DiscordJS.Client {
     this.selfBot = this.defaults.selfBot;
     if (options.prefix !== null) this.defaults.prefix = options.prefix;
     if (options.selfBot !== null) this.selfBot = options.selfBot;
+    this.handleCommands();
   }
 
   loadPlugins() {
     this.registry.plugins.forEach(plugin => plugin.emit('load', this));
-  }
-
-  load() {
-    this.loadPlugins();
-    this.handleCommands();
   }
 
   handleCommands() {
