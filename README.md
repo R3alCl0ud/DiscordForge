@@ -24,8 +24,7 @@ Client.on('ready', () => {
   console.log('Ready');
 })
 
-Client.login("email", "password").then(() => {
-  Client.registry.registerCommand(new evalCommand(Client.registry));
-}).catch(console.log);
+Client.registry.registerCommand(new evalCommand(Client.registry));
+Client.login("email", "password").catch(console.log);
 
 ```

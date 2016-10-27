@@ -80,7 +80,7 @@ class Command {
         this.responses.push(message);
       });
     } else if (typeof msgGenerator === 'string') {
-      this.Message = msgGenerator;
+      this.message = msgGenerator;
     }
 
     for (const option of Object.keys(options)) {
