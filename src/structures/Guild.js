@@ -1,45 +1,25 @@
-const DiscordJS = require('discord.js');
+const Collection = require('discord.js').Collection;
 const Command = require('./Command');
 
-/** Custom guild class
- * @extends {DiscordJS.Guild}
+/** Custom guild class extention, addes the needed thingies
+ * @interface
  */
-class guild extends DiscordJS.Guild {
-  constructor(client, data) {
-    super(client, data);
-
-
-    this._commands = new DiscordJS.Collection();
-
-    if (!data) return;
-    if (data.unavailable) {
-      /**
-       * Whether the Guild is available to access. If it is not available, it indicates a server outage.
-       * @type {boolean}
-       */
-      this.available = false;
-
-      /**
-       * The Unique ID of the Guild, useful for comparisons.
-       * @type {string}
-       */
-      this.id = data.id;
-    } else {
-      this.available = true;
-      this.setup(data);
-    }
-  }
+class Guild {
 
   setup(data) {
     super.setup(data);
 
-    if (data.commands) {
-      data.commands.forEach(command => {
-        this.registerCommand(new Command(command.title, command.message, this));
+    this._commands = new Collection();
+    if (this.client.options.guildConfigs === true) {
+      this._prefix = this.client.getConfigOption(this, 'prefix') || this.client.options.prefix;
+      this.client.getConfigOption(this, 'commands').forEach(command => {
+        this.registerCommand(new GuildCommand(command.id, command.message, this));
       });
+    } else {
+      this._prefix = this.client.options.prefix;
     }
-    this._prefix = data.prefix || this.client.defaults.prefix;
   }
+
   /**
    * Registers a command to the guild
    * @param {Command} command The command to register
@@ -49,6 +29,7 @@ class guild extends DiscordJS.Guild {
       this._commands.set(command.id, command);
     }
   }
+
   /**
    * Removes a command from the guild
    * @param {Command} command The command to remove
@@ -58,30 +39,33 @@ class guild extends DiscordJS.Guild {
       this._commands.delete(command.id);
     }
   }
+
   /**
    * Enables a plugin
    * @param {string} plugin the id of the plugin to disable
    */
   enablePlugin(plugin) {
-    if (plugin !== undefined && typeof plugin === 'string' && this.enabledPlugins.indexOf(plugin) === -1) {
+    if (plugin !== undefined && typeof plugin === 'string' && this._enabledPlugins.indexOf(plugin) === -1) {
       this.client.emit('debug', `Enabling plugin: ${plugin}`);
-      this.enabledPlugins.push(plugin);
+      this._enabledPlugins.push(plugin);
     }
   }
+
   /**
    * Disables a plugin
    * @param {string} plugin the id of the plugin to disable
    */
   disablePlugin(plugin) {
-    if (plugin !== undefined && typeof plugin === 'string' && this.enabledPlugins.indexOf(plugin) !== -1) {
+    if (plugin !== undefined && typeof plugin === 'string' && this._enabledPlugins.indexOf(plugin) !== -1) {
       this.client.emit('debug', `Disabling plugin: ${plugin}`);
-      const pos = this.enabledPlugins.indexOf(plugin);
-      this.enabledPlugins.splice(pos, 1);
+      const pos = this._enabledPlugins.indexOf(plugin);
+      this._enabledPlugins.splice(pos, 1);
     }
   }
 
   _setPrefix(Prefix) {
     this._prefix = Prefix;
+    this.client.setConfigOption(this, 'prefix', Prefix);
   }
 
   changePrefix(Prefix) {
@@ -91,12 +75,35 @@ class guild extends DiscordJS.Guild {
   }
 
   get prefix() {
-    return this._prefix;
+    return this._prefix ? this._prefix : this.client.options.guildConfigs ? this.client.getConfigOption(this, 'prefix') || this.client.options.prefix : this.client.options.prefix;
   }
 
   get commands() {
+    this._commands = this._commands ? this._commands : new Collection();
+    if (this.client.options.guildConfigs === true) {
+      this.client.getConfigOption(this, 'commands').forEach(command => {
+        this.registerCommand(new GuildCommand(command.id, command.message, this));
+      });
+    }
     return this._commands;
+  }
+
+  get enabledPlugins() {
+    return this._enabledPlugins ? this._enabledPlugins : this.client.options.guildConfigs ? this.client.getConfigOption(this, 'enabledPlugins') : this.client.options.enabledPlugins;
+  }
+
+  static applyToClass(target) {
+    for (const prop of ['prefix', 'commands', '_setPrefix', 'changePrefix', 'enabledPlugins', 'disablePlugin', 'enablePlugin', 'registerCommand', 'removeCommand']) {
+      Object.defineProperty(target.prototype, prop, Object.getOwnPropertyDescriptor(this.prototype, prop));
+    }
   }
 }
 
-module.exports = guild;
+class GuildCommand extends Command {
+  constructor(id, message, guild) {
+    super(id, message, guild);
+    this.description = message;
+  }
+}
+
+module.exports = Guild;

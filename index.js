@@ -1,4 +1,9 @@
+const DiscordJS = require('discord.js');
+const Guild = require('./src/structures/Guild');
+
 module.exports = {
+
+  DiscordJS: DiscordJS,
 
   // Regular Expressions
   YTRegex: /(?:https?:\/\/)?(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-]+)(&(amp;)?[\w\?=]*)?/,
@@ -20,9 +25,10 @@ module.exports = {
 
   Plugin: require('./src/structures/Plugin'),
   Command: require('./src/structures/Command'),
-  Guild: require('./src/structures/Guild')
+  Guild: Guild
 
 }
+Guild.applyToClass(DiscordJS.Guild);
 
 /**
  * @external DiscordJS.Client

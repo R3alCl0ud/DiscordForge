@@ -1,8 +1,9 @@
 const DiscordJS = require('discord.js');
-// const util = require('../util');
+const util = require('../util');
 const ForgeRegistry = require('./ForgeRegistry');
 const CommandHandler = require('./CommandHandler');
-const ForgeManager = require('./ForgeManager');
+const Constants = require('../Constants');
+const DefaultHelp = require('../DefaultHelp');
 
 /**
  * Options to be passed to used in a command
@@ -16,7 +17,6 @@ const ForgeManager = require('./ForgeManager');
 class ForgeClient extends DiscordJS.Client {
   constructor(options = {}) {
     super(options);
-    this.forgeManager = new ForgeManager(this);
 
     /**
      * Client plugin and command registry
@@ -24,27 +24,72 @@ class ForgeClient extends DiscordJS.Client {
      */
     this.registry = new ForgeRegistry(this);
 
-
+    /**
+     * Client command handler
+     * @type {CommandHandler}
+     */
     this.commandHandler = new CommandHandler(this);
     // this.dataManager.newGuild = this.forgeManager.newGuild;
     // this.resolver.resolveGuild = this.forgeManager.resolveGuild;
+
     /**
      * Default Options to use
      * @type {ClientDefaults}
      */
-    this.defaults = { prefix: '!', selfBot: false, defaultHelp: true };
-    this.selfBot = this.defaults.selfBot;
-    if (options.prefix !== null) this.defaults.prefix = options.prefix;
-    if (options.selfBot !== null) this.selfBot = options.selfBot;
+    this.options = Constants.mergeDefaults(Constants.defaults.ClientOptions, this.options);
     this.handleCommands();
+
+    this.on('updateCommand', this.loadHelp.bind(this));
   }
 
   loadPlugins() {
     this.registry.plugins.forEach(plugin => plugin.emit('load', this));
   }
 
+  loadHelp() {
+    if (this.options.defaultHelp === true) {
+      this.registry.registerCommand(new DefaultHelp(this.registry));
+    }
+  }
+
   handleCommands() {
     this.on('message', message => this.commandHandler.handleMessage(message, message.author, message.channel, message.guild));
+  }
+
+  /**
+   * Default function for getting per guild config options
+   * @param {Guild} guild The guild to get the config option from
+   * @param {string} prop The property to get from the guild's config file
+   * @returns {string|number|Array|Object}
+   */
+  getConfigOption(guild, prop) {
+    const defaultConfig = {
+      prefix: this.options.prefix,
+      commands: [],
+      enabledPlugins: [] };
+    const config = util.openJSON(`./configs/${guild.id}.json`);
+    if (config) return config[prop];
+    return defaultConfig[prop];
+  }
+
+  /**
+   * Default function for changing per guilf config options
+   * @param {Guild} guild The guild to set the config option for
+   * @param {string} prop The property in the config to change
+   * @param {string|number|Array|Object} value The value to set the config property to
+   */
+  setConfigOption(guild, prop, value) {
+    const config = util.openJSON(`./configs/${guild.id}.json`);
+    if (config) {
+      config[prop] = value;
+    } else {
+      const defaultConfig = {
+        prefix: this.options.prefix,
+        commands: [],
+        enabledPlugins: [] };
+      defaultConfig[prop] = value;
+      util.writeJSON(`./configs/${guild.id}.json`, defaultConfig);
+    }
   }
 }
 
