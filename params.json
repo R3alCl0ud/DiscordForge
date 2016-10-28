@@ -1,6 +1,0 @@
-{
-  "name": "Discord-forge",
-  "tagline": "",
-  "body": "# Discord-Forge\r\n[![NPM](https://nodei.co/npm/DiscordForge.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/DiscordForge/)\r\n\r\n[![Build Status](https://travis-ci.org/R3alCl0ud/Discord-Forge.svg?branch=master)](https://travis-ci.org/R3alCl0ud/Discord-Forge)\r\nA highly extensible command client for discord.js\r\n# Example Usage\r\n\r\n```js\r\nconst Forge = require('DiscordForge');\r\nconst Client = new Forge.Client({selfBot: true, prefix: \"/\"});\r\n\r\nclass evalCommand extends Forge.Command {\r\n  constructor(registry) {\r\n    super(\"eval\", null, registry);\r\n  }\r\n  Message(message, author, channel, guild, client) {\r\n    try {\r\n      const com = eval(message.content.split(' ').slice(1).join(' '));\r\n      channel.sendMessage('```\\n' + com + '```');\r\n    } catch (e) {\r\n      channel.sendMessage('```\\n' + e + '```');\r\n    }\r\n  }\r\n}\r\nClient.on('ready', () => {\r\n  console.log('Ready');\r\n})\r\n\r\nClient.registry.registerCommand(new evalCommand(Client.registry));\r\nClient.login(\"email\", \"password\").catch(console.log);\r\n\r\n```\r\n",
-  "note": "Don't delete this file! It's used internally to help with page regeneration."
-}
