@@ -15,10 +15,10 @@ const DiscordJS = require('discord.js');
  */
 class Command {
   /**
-   * @param {string} id The ID of the command
-   * @param {MessageGenerator|string|falsy} msgGenerator function
+   * @param {string} id The ID of the command.
+   * @param {MessageGenerator|string|falsy} msgGenerator function.
    * @param {Object} parent This can be a guild, plugin. This should be a command if you are registering a SubCommand.
-   * @param {CommandOptions} options Option t be passed to the command
+   * @param {CommandOptions} options Option t be passed to the command.
    */
   constructor(id, msgGenerator, parent, options = {}) {
     /**
@@ -103,16 +103,21 @@ class Command {
   }
 
   registerSubCommand(CommandOrId, msgGenerator, options) {
+    // const oldCommand = this;
     if (CommandOrId instanceof Command) {
       this.subCommands.set(CommandOrId.id, CommandOrId);
+      // this.client.emit('updateCommand', oldCommand, this);
     } else if (typeof CommandOrId === 'string') {
       this.subCommands.set(CommandOrId, new Command(CommandOrId, msgGenerator, this, options));
+      // this.client.emit('updateCommand', oldCommand, this);
     }
   }
 
 
   setSubAlias(subCommand, alias) {
+    // const oldCommand = this;
     this.subCommandAliases.set(alias, subCommand);
+    // this.client.emit('updateCommand', oldCommand, this);
   }
 
   _addAlias(alias) {

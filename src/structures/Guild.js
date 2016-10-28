@@ -13,7 +13,7 @@ class Guild {
     if (this.client.options.guildConfigs === true) {
       this._prefix = this.client.getConfigOption(this, 'prefix') || this.client.options.prefix;
       this.client.getConfigOption(this, 'commands').forEach(command => {
-        this.registerCommand(new GuildCommand(command.id, command.message, this));
+        this.registerCommand(new GuildCommand(this.client, command.id, command.message, this));
       });
     } else {
       this._prefix = this.client.options.prefix;
@@ -82,7 +82,7 @@ class Guild {
     this._commands = this._commands ? this._commands : new Collection();
     if (this.client.options.guildConfigs === true) {
       this.client.getConfigOption(this, 'commands').forEach(command => {
-        this.registerCommand(new GuildCommand(command.id, command.message, this));
+        this.registerCommand(new GuildCommand(this.client, command.id, command.message, this));
       });
     }
     return this._commands;
@@ -100,8 +100,8 @@ class Guild {
 }
 
 class GuildCommand extends Command {
-  constructor(id, message, guild) {
-    super(id, message, guild);
+  constructor(client, id, message, guild) {
+    super(client, id, message, guild);
     this.description = message;
   }
 }

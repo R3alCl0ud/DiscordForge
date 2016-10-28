@@ -1,5 +1,4 @@
 const Command = require('./structures/Command');
-
 const Tab = '    ';
 
 class help extends Command {
@@ -7,26 +6,31 @@ class help extends Command {
     super('help', null, registry);
   }
   message(message, author, channel, guild, client) {
-    const helpText = [`Showing command list for **${author.username}**`];
-    if (client.options.guildConfigs === true) {
-      client.registry.plugins.forEach(plugin => {
-        if (guild.enabledPlugins.indexOf(plugin.id) === -1) return null;
-        helpText.push(`**${plugin.name}**`);
-        plugin.commands.forEach(command => {
-          helpText.push(`    **${command.id}**`);
-          if (command.subCommands.size >= 1) helpText.push(getSubCommands(command, 2));
-        });
-        return null;
-      });
-    } else {
-      client.registry.plugins.forEach(plugin => {
-        helpText.push(`**${plugin.name}**`);
-        plugin.commands.forEach(command => {
-          helpText.push(`    **${command.id}**`);
-          if (command.subCommands.size >= 1) helpText.push(getSubCommands(command, 2));
-        });
+    const helpText = [`Showing command list for **${author.username}**\n`];
+    helpText.push('**Global Commands**');
+    client.registry.commands.forEach(command => {
+      if (command.id !== 'help') {
+        helpText.push(`    **${command.id}**`);
+        if (command.subCommands.size >= 1) helpText.push(getSubCommands(command, 2));
+      }
+    });
+    if (guild.commands.size >= 1) {
+      helpText.push('\nCustom Commands');
+      guild.commands.forEach(command => {
+        helpText.push(`    **${command.id}**`);
       });
     }
+
+
+    client.registry.plugins.forEach(plugin => {
+      if (guild.enabledPlugins.indexOf(plugin.id) === -1 && client.options.guildConfigs === true) return null;
+      helpText.push(`\n**${plugin.name}**`);
+      plugin.commands.forEach(command => {
+        helpText.push(`    **${command.id}**`);
+        if (command.subCommands.size >= 1) helpText.push(getSubCommands(command, 2));
+      });
+      return null;
+    });
     channel.sendMessage(helpText.join('\n'));
   }
 }
@@ -34,10 +38,12 @@ class help extends Command {
 class helpSub extends Command {
   constructor(command, Help) {
     super(command.id, null, Help);
-    this.command = command;
+    this.setAlias(command.names);
+    this.usage = command.usage;
+    this.description = command.description;
   }
-  message(message, author, channel) {
-    channel.sendMessage(`Showing advanced help for **${this.command.id}**`);
+  message(message, author, channel, guild) {
+    channel.sendMessage(`**Showing more info for:** \`${this.id}\`\n**Aliases:** ${this.names}\n**Description:** ${this.description}\n**Usage:** \`${guild.prefix}${this.usage}\``);
   }
 }
 
@@ -57,5 +63,5 @@ function getSubCommands(command, level) {
   return `${tabs}${command.id}`;
 }
 
-exports.defaultHelp = help;
-exports.defaultHelpSub = helpSub;
+exports.help = help;
+exports.helpSub = helpSub;

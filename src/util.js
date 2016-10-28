@@ -1,4 +1,5 @@
 const fs = require('fs');
+if (!fs.existsSync('./configs')) fs.mkdirSync('./configs');
 
 function openJSON(JSONFile) {
   if (fs.existsSync(JSONFile)) {

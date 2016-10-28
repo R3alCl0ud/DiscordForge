@@ -1,10 +1,8 @@
 const Forge = require('../');
 
 class testPlugin extends Forge.Plugin {
-  constructor(client) {
+  constructor() {
     super("testPlugin", "Test Plugin", "R3alCl0ud", "1.0.0", "Plugin for testing, and an example");
-    // this.client = client;
-
     this.registerCommand(new exampleCommand(this));
     this.registerCommand(new exampleDM(this));
   }

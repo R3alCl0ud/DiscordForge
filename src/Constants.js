@@ -4,7 +4,9 @@ exports.defaults = {
     guildConfigs: false,
     selfBot: false,
     defaultHelp: true,
-    enabledPlugins: [] } };
+    enabledPlugins: [],
+  },
+};
 
 function mergeDefaults(def, given) {
   if (!given) return def;

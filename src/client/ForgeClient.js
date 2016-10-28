@@ -3,7 +3,8 @@ const util = require('../util');
 const ForgeRegistry = require('./ForgeRegistry');
 const CommandHandler = require('./CommandHandler');
 const Constants = require('../Constants');
-const DefaultHelp = require('../DefaultHelp');
+const DefaultHelp = require('../DefaultHelp').help;
+const DefaultHelpSub = require('../DefaultHelp').helpSub;
 
 /**
  * Options to be passed to used in a command
@@ -38,7 +39,9 @@ class ForgeClient extends DiscordJS.Client {
      */
     this.options = Constants.mergeDefaults(Constants.defaults.ClientOptions, this.options);
     this.handleCommands();
-
+    if (this.options.defaultHelp === true) {
+      this.registry.registerCommand(new DefaultHelp(this.registry));
+    }
     this.on('updateCommand', this.loadHelp.bind(this));
   }
 
@@ -46,9 +49,15 @@ class ForgeClient extends DiscordJS.Client {
     this.registry.plugins.forEach(plugin => plugin.emit('load', this));
   }
 
-  loadHelp() {
+  loadHelp(command) {
+    const help = this.registry.commands.get('help') || new DefaultHelp(this, this.registry);
     if (this.options.defaultHelp === true) {
-      this.registry.registerCommand(new DefaultHelp(this.registry));
+      if (!this.registry.commands.has('help')) {
+        this.registry.registerCommand(help);
+        command.subCommands.forEach(sub => {
+          help.registerSubCommand(new DefaultHelpSub(sub, help));
+        });
+      }
     }
   }
 
@@ -66,7 +75,8 @@ class ForgeClient extends DiscordJS.Client {
     const defaultConfig = {
       prefix: this.options.prefix,
       commands: [],
-      enabledPlugins: [] };
+      enabledPlugins: [],
+    };
     const config = util.openJSON(`./configs/${guild.id}.json`);
     if (config) return config[prop];
     return defaultConfig[prop];
@@ -86,7 +96,8 @@ class ForgeClient extends DiscordJS.Client {
       const defaultConfig = {
         prefix: this.options.prefix,
         commands: [],
-        enabledPlugins: [] };
+        enabledPlugins: [],
+      };
       defaultConfig[prop] = value;
       util.writeJSON(`./configs/${guild.id}.json`, defaultConfig);
     }
