@@ -1,6 +1,6 @@
 {
   "name": "DiscordForge",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A command client for discord.js",
   "main": "index.js",
   "dependencies": {
@@ -15,7 +15,7 @@
   },
   "scripts": {
     "test": "eslint src/",
-    "docs": "jsdoc2md --json src/*.js src/*/*.js > api.json"
+    "docs": "jsdoc --configure .jsdoc.json --verbose"
   },
   "repository": {
     "type": "git",

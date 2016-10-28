@@ -30,23 +30,27 @@ class Command {
     /**
      * The ID of the command
      * @type {string}
+     * @readonly
      */
-    this._id = id;
+    this.id = id;
 
     /**
      * If the command is case sensitive
      * @type {boolean}
+     * @readonly
      */
     this.caseSensitive = true;
     /**
      * If the command can only be used in DM/GroupDM.
      * @type {boolean}
+     * @readonly
      */
     this.dmOnly = false;
 
     /**
      * If the command can only be used in a guild channel. Cannot be true is dmOnly is true.
      * @type {boolean}
+     * @readonly
      */
     this.guildOnly = false;
 
@@ -62,15 +66,9 @@ class Command {
     this.usage = `${this.id}`;
     /**
      * The aliases of the command
-     * @type {Array}
+     * @type {Array<string>}
      */
     this.names = [];
-
-    /**
-     *
-     * @type {boolean}
-     */
-    this.defaultHelp = true;
 
 
     this._responses = [];
@@ -91,9 +89,17 @@ class Command {
       }
     }
 
+    /**
+     * Collection of subCommands
+     * @type {Collection<Command>}
+     */
     this.subCommands = new DiscordJS.Collection();
-    this.subCommandAliases = new DiscordJS.Collection();
 
+    /**
+     * Collection of subCommands aliases
+     * @type {Collection<string>}
+     */
+    this.subCommandAliases = new DiscordJS.Collection();
 
     if (this.names && this.names instanceof Array) {
       this._addAlias(this.names);
@@ -101,49 +107,56 @@ class Command {
       this._addAlias(this.names);
     }
   }
-
+  /**
+   * Registers a command
+   * @param {Command|string} CommandOrId The subCommand to register or the id to use
+   * @param {function|string|Array<string|function>|falsy} [msgGenerator] The how to respond to the message
+   * @param {CommandOptions} [options] The options to pass to the subCommand
+   */
   registerSubCommand(CommandOrId, msgGenerator, options) {
-    // const oldCommand = this;
     if (CommandOrId instanceof Command) {
       this.subCommands.set(CommandOrId.id, CommandOrId);
-      // this.client.emit('updateCommand', oldCommand, this);
     } else if (typeof CommandOrId === 'string') {
       this.subCommands.set(CommandOrId, new Command(CommandOrId, msgGenerator, this, options));
-      // this.client.emit('updateCommand', oldCommand, this);
     }
   }
 
-
+  /**
+   * Registers an alias for a subCommand
+   * @param {Command} subCommand The command to set an alias for
+   * @param {string|Array<string>} alias t
+   */
   setSubAlias(subCommand, alias) {
-    // const oldCommand = this;
     this.subCommandAliases.set(alias, subCommand);
-    // this.client.emit('updateCommand', oldCommand, this);
   }
 
   _addAlias(alias) {
     if (this.Parent instanceof Command) {
       if (alias instanceof Array) {
         return alias.forEach(name => {
-          this.Parent.setSubAlias(this.id, this.caseSensitive ? name : name.toLowerCase());
+          this.Parent.setSubAlias(this, this.caseSensitive ? name : name.toLowerCase());
           if (this.names.indexOf(name) === -1) this.names.push(this.caseSensitive ? name : name.toLowerCase());
         });
       } else if (typeof alias === 'string') {
         if (this.names.indexOf(alias) === -1) this.names.push(this.caseSensitive ? alias : alias.toLowerCase());
-        return this.Parent.setSubAlias(this.id, this.caseSensitive ? alias : alias.toLowerCase());
+        return this.Parent.setSubAlias(this, this.caseSensitive ? alias : alias.toLowerCase());
       }
     }
     if (alias instanceof Array) {
       alias.forEach(name => {
-        this.Parent.registerAlias(this._id, this.caseSensitive ? name : name.toLowerCase());
+        this.Parent.registerAlias(this, this.caseSensitive ? name : name.toLowerCase());
         if (this.names.indexOf(name) === -1) this.names.push(this.caseSensitive ? name : name.toLowerCase());
       });
     } else if (typeof alias === 'string') {
-      this.Parent.registerAlias(this._id, this.caseSensitive ? alias : alias.toLowerCase());
+      this.Parent.registerAlias(this, this.caseSensitive ? alias : alias.toLowerCase());
       if (this.names.indexOf(alias) === -1) this.names.push(this.caseSensitive ? alias : alias.toLowerCase());
     }
-    return new Error('Alias must be a string or an array');
+    return new Error('Alias must be a string or an array of strings');
   }
-
+  /**
+   * Registers an alias for this command
+   * @param {string|Array<string>} alias t
+   */
   setAlias(alias) {
     this._addAlias(alias);
   }
@@ -154,10 +167,6 @@ class Command {
     } else {
       return this.Parent.aliases.get(this._id);
     }
-  }
-
-  get id() {
-    return this._id;
   }
 
   get responses() {

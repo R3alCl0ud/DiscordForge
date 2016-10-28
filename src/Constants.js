@@ -1,6 +1,6 @@
 exports.defaults = {
   ClientOptions: {
-    prefix: '//',
+    prefix: '/',
     guildConfigs: false,
     selfBot: false,
     defaultHelp: true,

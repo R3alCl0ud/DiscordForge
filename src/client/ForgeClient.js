@@ -8,14 +8,27 @@ const DefaultHelpSub = require('../DefaultHelp').helpSub;
 
 /**
  * Options to be passed to used in a command
- * @typedef {Object} ClientDefaults
- * @property {string} [prefix=!] The default prefix to use for a guild
+ * @typedef {Object} ForgeClientOptions
+ * @property {string} [prefix='/'] The default prefix to use for a guild
  * @property {boolean} [selfBot=false] Whether or not the client is a selfbot.
- * @property {boolean} [perGuild=false] Whether or not the client should use per guild settings.
- * @property {function} [selfBot=false] Whether or not the client is a selfbot.
- * @extends {DiscordJS.Client}
+ * @property {boolean} [guildConfigs=false] Whether or not the client should use per guild configs.
+ * @property {Array<string>} [enabledPlugins=[]] Array of the IDs of plugins that should be enabled by default
+ * @property {function} [getConfigOption] Optional custom function for retreiving guild config options
+ * must except the same parameters as the default one
+ * @property {function} [setConfigOption] Optional custom function for setting guild config options
+ * must except the same parameters as the default one
+ */
+
+
+/**
+ * The ForgeClient
+ * @extends {Client}
  */
 class ForgeClient extends DiscordJS.Client {
+
+  /**
+   * @param {ForgeClientOptions} options The options to pass to the client
+   */
   constructor(options = {}) {
     super(options);
 
@@ -30,25 +43,27 @@ class ForgeClient extends DiscordJS.Client {
      * @type {CommandHandler}
      */
     this.commandHandler = new CommandHandler(this);
-    // this.dataManager.newGuild = this.forgeManager.newGuild;
-    // this.resolver.resolveGuild = this.forgeManager.resolveGuild;
 
     /**
      * Default Options to use
-     * @type {ClientDefaults}
+     * @type {ForgeClientOptions}
      */
     this.options = Constants.mergeDefaults(Constants.defaults.ClientOptions, this.options);
     this.handleCommands();
     if (this.options.defaultHelp === true) {
       this.registry.registerCommand(new DefaultHelp(this.registry));
     }
+
     this.on('updateCommand', this.loadHelp.bind(this));
   }
 
   loadPlugins() {
     this.registry.plugins.forEach(plugin => plugin.emit('load', this));
   }
-
+  /**
+   * Loads the help command for a command
+   * @param {Command} command The command to register help for
+   */
   loadHelp(command) {
     const help = this.registry.commands.get('help') || new DefaultHelp(this, this.registry);
     if (this.options.defaultHelp === true) {

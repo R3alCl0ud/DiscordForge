@@ -28,19 +28,17 @@ class CommandHandler {
         } else if (command.responses.length > 1) {
           let response = command.responses[Math.random() * (command.responses.length - 1)];
           if (typeof response === 'string') {
-            return channel.sendMessage(response);
+            channel.sendMessage(response);
           } else if (typeof response === 'function') {
-            return response(message, author, channel, guild, this.client);
+            response(message, author, channel, guild, this.client);
           }
         }
+        return this.client.emit('command', command);
       }
     }
-    /**
-     * emits when a normal noncommand message is received
-     * @event ForgeClient#nonCommand
-     */
-    return this.client.emit('nonCommand', message);
+    return this.client.emit('plainMessage', message);
   }
+
   handleGroupDM(message, author, group) {
     let cmdArgs = message.content.split(' ');
     if (cmdArgs[0].substring(0, this.client.options.prefix.length) !== this.client.options.prefix) return false;
@@ -48,17 +46,18 @@ class CommandHandler {
     if (command) {
       if (command.guildOnly === true) return false;
       if (typeof command.message === 'string') {
-        return group.sendMessage(command.message);
+        group.sendMessage(command.message);
       } else if (typeof command.message === 'function') {
-        return command.message(message, author, group, this.client);
+        command.message(message, author, group, this.client);
       } else if (command.responses.length > 1) {
         let response = command.responses[Math.random() * (command.responses.length - 1)];
         if (typeof response === 'string') {
-          return group.sendMessage(response);
+          group.sendMessage(response);
         } else if (typeof response === 'function') {
-          return response(message, author, group, this.client);
+          response(message, author, group, this.client);
         }
       }
+      return this.client.emit('command', command);
     }
     return this.client.emit('nonCommand', message);
   }
@@ -108,9 +107,15 @@ class CommandHandler {
     return this.client.emit('nonCommand', message);
   }
 
-  getCommand(message, perGuild = false) {
+  /**
+   * Checks if a message is a command
+   * @param {Message} message The message to get the command from
+   * @param {boolean} guildConfigs Whether or not custom configs is enabled
+   * @returns {Command|undefined}
+   */
+  getCommand(message, guildConfigs = false) {
     let command;
-    if (perGuild) {
+    if (guildConfigs) {
       let args = message.content.split(' ');
       let label = args[0].substring(message.guild.prefix.length);
       label = this.client.registry.aliases.get(label) || label;
