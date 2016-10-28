@@ -4,7 +4,8 @@
   "description": "A command client for discord.js",
   "main": "index.js",
   "dependencies": {
-    "discord.js": "github:hydrabolt/discord.js#indev"
+    "discord.js": "github:hydrabolt/discord.js#indev",
+    "minami": "^1.1.1"
   },
   "devDependencies": {
     "eslint": "^3.8.1",
