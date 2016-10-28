@@ -1,4 +1,4 @@
-const Forge = require('../');
+const Forge = require('../src');
 const auth = require('./auth.json');
 const ExamplePlugin = require('./selfPlugin');
 const Client = new Forge.ForgeClient({ prefix: "//", guildConfigs: true });

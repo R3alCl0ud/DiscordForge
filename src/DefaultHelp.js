@@ -5,7 +5,7 @@ class help extends Command {
   constructor(registry) {
     super('help', null, registry);
   }
-  
+
   message(message, author, channel, guild, client) {
     const helpText = [`Showing command list for **${author.username}**\n`];
     helpText.push('**Global Commands**');
