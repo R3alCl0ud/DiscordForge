@@ -24,7 +24,7 @@ const DefaultHelpSub = require('../DefaultHelp').helpSub;
  * The ForgeClient
  * @extends {Client}
  */
-class ForgeClient extends DiscordJS.Client {
+class Client extends DiscordJS.Client {
 
   /**
    * @param {ForgeClientOptions} options The options to pass to the client
@@ -119,4 +119,4 @@ class ForgeClient extends DiscordJS.Client {
   }
 }
 
-module.exports = ForgeClient;
+module.exports = Client;

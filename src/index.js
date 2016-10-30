@@ -20,7 +20,7 @@ module.exports = {
   hasRole: require('./util').hasRole,
   hasPerms: require('./util').hasPerms,
 
-  ForgeClient: require('./client/ForgeClient'),
+  Client: require('./client/Client'),
   CommandHandler: require('./client/CommandHandler'),
 
   Plugin: require('./structures/Plugin'),
