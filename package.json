@@ -1,6 +1,6 @@
 {
   "name": "DiscordForge",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "A command client for discord.js",
   "main": "src/index.js",
   "dependencies": {
