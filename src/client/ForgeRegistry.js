@@ -16,11 +16,19 @@ class ForgeRegistry {
     this.commands = new Collection();
     this.aliases = new Collection();
   }
-
-  reloadPlugin(plugin) {
+  
+  /**
+   * Removes a plugin from the registry
+   * @param {Plugin} plugin The plugin to register
+   */
+  removePlugin(plugin) {
     if (plugin instanceof Plugin && this.plugins.has(plugin.id)) this.plugins.delete(plugin.id);
   }
 
+  /**
+   * Registers a plugin to the registry
+   * @param {Plugin} plugin The plugin to register
+   */
   registerPlugin(plugin) {
     if (plugin instanceof Plugin) {
       this.plugins.set(plugin.id, plugin);
