@@ -16,7 +16,7 @@ class ForgeRegistry {
     this.commands = new Collection();
     this.aliases = new Collection();
   }
-  
+
   /**
    * Removes a plugin from the registry
    * @param {Plugin} plugin The plugin to register
