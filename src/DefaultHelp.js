@@ -16,7 +16,7 @@ class help extends Command {
       }
     });
     if (guild.commands.size >= 1) {
-      helpText.push('\nCustom Commands');
+      helpText.push('\n**Custom Commands**');
       guild.commands.forEach(command => {
         helpText.push(`    **${command.id}**`);
       });

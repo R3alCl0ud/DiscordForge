@@ -75,14 +75,25 @@ class Guild {
   }
 
   get prefix() {
-    return this._prefix ? this._prefix : this.client.options.guildConfigs ? this.client.getConfigOption(this, 'prefix') || this.client.options.prefix : this.client.options.prefix;
+    if (!this._prefix) {
+      if (this.client.options.guildConfigs) {
+        this.client.getConfigOption(this, 'prefix').then(prefix => {
+          this._prefix = prefix || this.client.options.prefix;
+        });
+      } else {
+        this._prefix = this.client.options.prefix;
+      }
+    }
+    return this._prefix;
   }
 
   get commands() {
     this._commands = this._commands ? this._commands : new Collection();
     if (this.client.options.guildConfigs === true) {
-      this.client.getConfigOption(this, 'commands').forEach(command => {
-        this.registerCommand(new GuildCommand(this.client, command.id, command.message, this));
+      this.client.getConfigOption(this, 'commands').then(commands => {
+        commands.forEach(command => {
+          this.registerCommand(new GuildCommand(command.id, command.message, this));
+        });
       });
     }
     return this._commands;
@@ -98,19 +109,19 @@ class Guild {
         this._enabledPlugins = this.client.options.enabledPlugins;
       }
     }
-    return this._enabledPlugins;
+    return this._enabledPlugins || this.client.options.enabledPlugins;
   }
 
   static applyToClass(target) {
-    for (const prop of ['prefix', 'commands', '_setPrefix', 'changePrefix', 'enabledPlugins', 'disablePlugin', 'enablePlugin', 'registerCommand', 'removeCommand']) {
+    for (const prop of['prefix', 'commands', '_setPrefix', 'changePrefix', 'enabledPlugins', 'disablePlugin', 'enablePlugin', 'registerCommand', 'removeCommand']) {
       Object.defineProperty(target.prototype, prop, Object.getOwnPropertyDescriptor(this.prototype, prop));
     }
   }
 }
 
 class GuildCommand extends Command {
-  constructor(client, id, message, guild) {
-    super(client, id, message, guild);
+  constructor(id, message, guild) {
+    super(id, message, guild);
     this.description = message;
   }
 }

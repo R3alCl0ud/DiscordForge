@@ -118,6 +118,7 @@ class CommandHandler {
     if (guildConfigs) {
       let args = message.content.split(' ');
       let label = args[0].substring(message.guild.prefix.length);
+      if ((command = message.guild.commands.get(label)) !== undefined) return command;
       label = this.client.registry.aliases.get(label) || label;
       if ((command = this.client.registry.commands.get(label)) !== undefined || ((command = this.client.registry.commands.get(label.toLowerCase())) !== undefined && !command.caseSensitive)) {
         if (args.length > 1) return this.getSubCommand(args.splice(0, 1), command);
