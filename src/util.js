@@ -8,7 +8,7 @@ if (!fs.existsSync('./configs')) fs.mkdirSync('./configs');
  */
 function openJSON(JSONFile) {
   return new Promise((resolve, reject) => {
-    fs.readFile(JSONFile, (err, data) => {
+    fs.readFile(JSONFile, 'utf8', (err, data) => {
       if (err) return reject(err);
       return resolve(JSON.parse(data));
     });
