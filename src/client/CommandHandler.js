@@ -86,10 +86,10 @@ class CommandHandler {
 
   perGuild(message, author, channel, guild) {
     let cmdArgs = message.content.split(' ');
-    if (cmdArgs[0].substring(0, guild.prefix.length) !== guild.prefix) return false;
+    if (cmdArgs[0].substring(0, guild.prefix.length) !== guild.prefix) return this.client.emit('nonCommand', message);
     const command = this.getCommand(message, true);
     if (command) {
-      if (command.dmOnly === true) return false;
+      if (command.dmOnly === true) return this.client.emit('nonCommand', message);
       if (typeof command.message === 'string') {
         return channel.sendMessage(command.message);
       } else if (typeof command.message === 'function') {
