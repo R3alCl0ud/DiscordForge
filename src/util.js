@@ -1,17 +1,33 @@
 const fs = require('fs');
 if (!fs.existsSync('./configs')) fs.mkdirSync('./configs');
 
+/**
+ * Opens a json file and returns the data
+ * @param {string} JSONFile The file to retrive data from
+ * @returns {Promise<Object>}
+ */
 function openJSON(JSONFile) {
-  if (fs.existsSync(JSONFile)) {
-    var jason = JSON.parse(fs.readFileSync(JSONFile.toString()));
-    return jason;
-  } else {
-    return null;
-  }
+  return new Promise((resolve, reject) => {
+    fs.readFile(JSONFile, (err, data) => {
+      if (err) return reject(err);
+      return resolve(JSON.parse(data));
+    })
+  })
 }
 
-function writeJSON(JSONFile, jsonOb) {
-  fs.writeFileSync(JSONFile, JSON.stringify(jsonOb, null, '\t'));
+/**
+ * Writes a json object to a file
+ * @param {string} JSONFile The file to write to
+ * @param {Object} JSONObject The object to write to file
+ * @returns {Promise<string>}
+ */
+function writeJSON(JSONFile, JSONObject) {
+  return new Promise((resolve, reject) => {
+    fs.writeFile(JSONFile, JSON.stringify(JSONObject, null, '\t'), 'utf8', (err) => {
+      if (err) return reject(err);
+      return resolve('File saved');
+    });
+  });
 }
 
 function timeToMs(time) {

@@ -13,10 +13,10 @@ const DefaultHelpSub = require('../DefaultHelp').helpSub;
  * @property {boolean} [selfBot=false] Whether or not the client is a selfbot.
  * @property {boolean} [guildConfigs=false] Whether or not the client should use per guild configs.
  * @property {Array<string>} [enabledPlugins=[]] Array of the IDs of plugins that should be enabled by default
- * @property {function} [getConfigOption] Optional custom function for retreiving guild config options
- * must except the same parameters as the default one
- * @property {function} [setConfigOption] Optional custom function for setting guild config options
- * must except the same parameters as the default one
+ * @property {function} [getConfigOption=null] Optional custom function for retreiving guild config options
+ * must except the same parameters as the default one, must return a Promise
+ * @property {function} [setConfigOption=null] Optional custom function for setting guild config options
+ * must except the same parameters as the default one, must return a Promise
  */
 
 
@@ -53,17 +53,21 @@ class Client extends DiscordJS.Client {
     if (this.options.defaultHelp === true) {
       this.registry.registerCommand(new DefaultHelp(this.registry));
     }
+    if (this.options.hasOwnProperty('getConfigOption') && this.options.hasOwnProperty('setConfigOption')) {
+      this.getConfigOption = this.options.getConfigOption;
+      this.setConfigOption = this.options.setConfigOption;
+    }
 
     this.on('updateCommand', this.loadHelp.bind(this));
   }
 
   loadPlugins() {
-    this.registry.plugins.forEach(plugin => plugin.emit('load', this));
-  }
-  /**
-   * Loads the help command for a command
-   * @param {Command} command The command to register help for
-   */
+      this.registry.plugins.forEach(plugin => plugin.emit('load', this));
+    }
+    /**
+     * Loads the help command for a command
+     * @param {Command} command The command to register help for
+     */
   loadHelp(command) {
     const help = this.registry.commands.get('help') || new DefaultHelp(this, this.registry);
     if (this.options.defaultHelp === true) {
@@ -84,7 +88,7 @@ class Client extends DiscordJS.Client {
    * Default function for getting per guild config options
    * @param {Guild} guild The guild to get the config option from
    * @param {string} prop The property to get from the guild's config file
-   * @returns {string|number|Array|Object}
+   * @returns {Promise<string|number|Array|Object>}
    */
   getConfigOption(guild, prop) {
     const defaultConfig = {
@@ -92,9 +96,11 @@ class Client extends DiscordJS.Client {
       commands: [],
       enabledPlugins: [],
     };
-    const config = util.openJSON(`./configs/${guild.id}.json`);
-    if (config) return config[prop];
-    return defaultConfig[prop];
+    return new Promise((resolve, reject) => {
+      util.openJSON(`./configs/${guild.id}.json`).then(config => {
+        resolve(config[prop] || defaultConfig[prop])
+      }).catch(reject);
+    });
   }
 
   /**

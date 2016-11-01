@@ -36,16 +36,22 @@ Guild.applyToClass(DiscordJS.Guild);
  * @param {Message} Message The message received
  */
 
- /**
-  * Emmited when a command has been ran
-  * @event ForgeClient#command
-  * @param {Command} Command The command that was ran
-  */
+/**
+ * Emmited when a command has been ran
+ * @event ForgeClient#command
+ * @param {Command} Command The command that was ran
+ */
 
- /**
-  * @external Message
-  * @see {@link http://hydrabolt.github.io/discord.js/#!/docs/tag/indev/class/Message}
-  */
+/**
+ * Emmited when a plugin has been loaded
+ * @event Plugin#load
+ * @param {Client} Client The client that registered the plugin
+ */
+
+/**
+ * @external Message
+ * @see {@link http://hydrabolt.github.io/discord.js/#!/docs/tag/indev/class/Message}
+ */
 
 /**
  * @external Client

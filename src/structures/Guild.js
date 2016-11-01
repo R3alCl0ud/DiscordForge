@@ -46,7 +46,7 @@ class Guild {
    */
   enablePlugin(plugin) {
     if (plugin !== undefined && typeof plugin === 'string' && this._enabledPlugins.indexOf(plugin) === -1) {
-      this.client.emit('debug', `Enabling plugin: ${plugin}`);
+      this.client.emit('enablePlugin', this, this.client.registry.plugins.get(plugin));
       this._enabledPlugins.push(plugin);
     }
   }
@@ -57,7 +57,7 @@ class Guild {
    */
   disablePlugin(plugin) {
     if (plugin !== undefined && typeof plugin === 'string' && this._enabledPlugins.indexOf(plugin) !== -1) {
-      this.client.emit('debug', `Disabling plugin: ${plugin}`);
+      this.client.emit('disablePlugin', this, this.client.registry.plugins.get(plugin));
       const pos = this._enabledPlugins.indexOf(plugin);
       this._enabledPlugins.splice(pos, 1);
     }
@@ -89,11 +89,12 @@ class Guild {
   }
 
   get enabledPlugins() {
-    return this._enabledPlugins ? this._enabledPlugins : this.client.options.guildConfigs ? this.client.getConfigOption(this, 'enabledPlugins') : this.client.options.enabledPlugins;
+    if (!this._enabledPlugins) this.client.options.guildConfigs ? this.client.getConfigOption(this, 'enabledPlugins').then(plugins => this._enabledPlugins = plugins) : this._enabledPlugins = this.client.options.enabledPlugins;
+    return this._enabledPlugins;
   }
 
   static applyToClass(target) {
-    for (const prop of ['prefix', 'commands', '_setPrefix', 'changePrefix', 'enabledPlugins', 'disablePlugin', 'enablePlugin', 'registerCommand', 'removeCommand']) {
+    for (const prop of['prefix', 'commands', '_setPrefix', 'changePrefix', 'enabledPlugins', 'disablePlugin', 'enablePlugin', 'registerCommand', 'removeCommand']) {
       Object.defineProperty(target.prototype, prop, Object.getOwnPropertyDescriptor(this.prototype, prop));
     }
   }

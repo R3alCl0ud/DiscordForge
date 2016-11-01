@@ -32,6 +32,7 @@ class ForgeRegistry {
   registerPlugin(plugin) {
     if (plugin instanceof Plugin) {
       this.plugins.set(plugin.id, plugin);
+      plugin.emit('load', this.client);
     }
   }
 

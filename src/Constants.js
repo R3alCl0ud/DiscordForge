@@ -5,6 +5,8 @@ exports.defaults = {
     selfBot: false,
     defaultHelp: true,
     enabledPlugins: [],
+    getConfigOption: null,
+    setConfigOption: null,
   },
 };
 
