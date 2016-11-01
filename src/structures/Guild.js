@@ -89,12 +89,20 @@ class Guild {
   }
 
   get enabledPlugins() {
-    if (!this._enabledPlugins) this.client.options.guildConfigs ? this.client.getConfigOption(this, 'enabledPlugins').then(plugins => this._enabledPlugins = plugins) : this._enabledPlugins = this.client.options.enabledPlugins;
+    if (!this._enabledPlugins) {
+      if (this.client.options.guildConfigs) {
+        this.client.getConfigOption(this, 'enabledPlugins').then(plugins => {
+          this._enabledPlugins = plugins;
+        });
+      } else {
+        this._enabledPlugins = this.client.options.enabledPlugins;
+      }
+    }
     return this._enabledPlugins;
   }
 
   static applyToClass(target) {
-    for (const prop of['prefix', 'commands', '_setPrefix', 'changePrefix', 'enabledPlugins', 'disablePlugin', 'enablePlugin', 'registerCommand', 'removeCommand']) {
+    for (const prop of ['prefix', 'commands', '_setPrefix', 'changePrefix', 'enabledPlugins', 'disablePlugin', 'enablePlugin', 'registerCommand', 'removeCommand']) {
       Object.defineProperty(target.prototype, prop, Object.getOwnPropertyDescriptor(this.prototype, prop));
     }
   }

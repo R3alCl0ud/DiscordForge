@@ -62,12 +62,13 @@ class Client extends DiscordJS.Client {
   }
 
   loadPlugins() {
-      this.registry.plugins.forEach(plugin => plugin.emit('load', this));
-    }
-    /**
-     * Loads the help command for a command
-     * @param {Command} command The command to register help for
-     */
+    this.registry.plugins.forEach(plugin => plugin.emit('load', this));
+  }
+
+  /**
+   * Loads the help command for a command
+   * @param {Command} command The command to register help for
+   */
   loadHelp(command) {
     const help = this.registry.commands.get('help') || new DefaultHelp(this, this.registry);
     if (this.options.defaultHelp === true) {
@@ -98,7 +99,7 @@ class Client extends DiscordJS.Client {
     };
     return new Promise((resolve, reject) => {
       util.openJSON(`./configs/${guild.id}.json`).then(config => {
-        resolve(config[prop] || defaultConfig[prop])
+        resolve(config[prop] || defaultConfig[prop]);
       }).catch(reject);
     });
   }

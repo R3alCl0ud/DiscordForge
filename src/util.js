@@ -11,8 +11,8 @@ function openJSON(JSONFile) {
     fs.readFile(JSONFile, (err, data) => {
       if (err) return reject(err);
       return resolve(JSON.parse(data));
-    })
-  })
+    });
+  });
 }
 
 /**
