@@ -16,7 +16,7 @@ class CommandHandler {
     let cmdArgs = message.content.split(' ');
 
     if (channel.type === 'text') {
-      if (cmdArgs[0].substring(0, this.client.options.prefix.length) !== this.client.options.prefix) return false;
+      if (cmdArgs[0].substring(0, this.client.options.prefix.length) !== this.client.options.prefix) return this.client.emit('plainMessage', message);
 
       const command = this.getCommand(message);
       if (command !== undefined) {
@@ -59,7 +59,7 @@ class CommandHandler {
       }
       return this.client.emit('command', command);
     }
-    return this.client.emit('nonCommand', message);
+    return this.client.emit('plainMessage', message);
   }
 
   handleDM(message, author, dmChannel) {
@@ -81,15 +81,15 @@ class CommandHandler {
         }
       }
     }
-    return this.client.emit('nonCommand', message);
+    return this.client.emit('plainMessage', message);
   }
 
   perGuild(message, author, channel, guild) {
     let cmdArgs = message.content.split(' ');
-    if (cmdArgs[0].substring(0, guild.prefix.length) !== guild.prefix) return this.client.emit('nonCommand', message);
+    if (cmdArgs[0].substring(0, guild.prefix.length) !== guild.prefix) return this.client.emit('plainMessage', message);
     const command = this.getCommand(message, true);
     if (command) {
-      if (command.dmOnly === true) return this.client.emit('nonCommand', message);
+      if (command.dmOnly === true) return this.client.emit('plainMessage', message);
       if (typeof command.message === 'string') {
         return channel.sendMessage(command.message);
       } else if (typeof command.message === 'function') {
@@ -104,7 +104,7 @@ class CommandHandler {
              }
            }*/
     }
-    return this.client.emit('nonCommand', message);
+    return this.client.emit('plainMessage', message);
   }
 
   /**

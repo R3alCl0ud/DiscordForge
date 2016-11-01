@@ -113,7 +113,7 @@ class Guild {
   }
 
   static applyToClass(target) {
-    for (const prop of['prefix', 'commands', '_setPrefix', 'changePrefix', 'enabledPlugins', 'disablePlugin', 'enablePlugin', 'registerCommand', 'removeCommand']) {
+    for (const prop of ['prefix', 'commands', '_setPrefix', 'changePrefix', 'enabledPlugins', 'disablePlugin', 'enablePlugin', 'registerCommand', 'removeCommand']) {
       Object.defineProperty(target.prototype, prop, Object.getOwnPropertyDescriptor(this.prototype, prop));
     }
   }
