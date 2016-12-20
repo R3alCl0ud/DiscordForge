@@ -30,6 +30,24 @@ function writeJSON(JSONFile, JSONObject) {
   });
 }
 
+/**
+ * Opens a json file and returns the data
+ * @param {string} JSONFile The file to retrive data from
+ * @returns {Object}
+ */
+function openJSONSync(JSONFile) {
+  return JSON.parse(fs.readFileSync(JSONFile));
+}
+
+/**
+ * Writes a json object to a file
+ * @param {string} JSONFile The file to write to
+ * @param {Object} JSONObject The object to write to file
+ */
+function writeJSONSync(JSONFile, JSONObject) {
+  fs.writeFileSync(JSONFile, JSON.stringify(JSONObject, null, 't'));
+}
+
 function timeToMs(time) {
   var final = 0;
   var hms = time.split(':');

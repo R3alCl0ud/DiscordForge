@@ -13,6 +13,8 @@ module.exports = {
 
   openJSON: require('./util').openJSON,
   writeJSON: require('./util').writeJSON,
+  openJSONSync: require('./util').openJSONSync,
+  writeJSONSync: require('./util').writeJSONSync,
 
   hmsToms: require('./util').timeToMs,
 
