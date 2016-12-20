@@ -104,3 +104,5 @@ exports.hasRole = hasRole;
 exports.timeToMs = timeToMs;
 exports.writeJSON = writeJSON;
 exports.openJSON = openJSON;
+exports.writeJSONSync = writeJSONSync;
+exports.openJSONSync = openJSONSync;
