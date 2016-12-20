@@ -1,7 +1,7 @@
 language: node_js
 node_js:
     - stable
-install: npm install -g grunt-cli eslint jsdoc
+install: npm install -g grunt-cli eslint jsdoc minami
 script: bash ./deploy.sh
 env:
   global:
