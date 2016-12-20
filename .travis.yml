@@ -2,7 +2,8 @@ language: node_js
 node_js:
     - stable
 install: npm install -g grunt-cli eslint
+script: bash ./deploy.sh
 env:
   global:
-    - ENCRYPTION_LABEL: "af862fa96d3e"
+    - ENCRYPTION_LABEL: "977db4e2e3df"
     - COMMIT_AUTHOR_EMAIL: "r3alcl0ud@gmail.com"
