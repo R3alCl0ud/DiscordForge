@@ -52,7 +52,7 @@ build
 
 VERSION=`cat package.json | getJsonVal "['version']"`
 
-mv -v docs/DiscordForge/$VERION/* out/$SOURCE
+mv -v docs/DiscordForge/$VERSION/* out/$SOURCE
 
 # Commit and push
 cd out
