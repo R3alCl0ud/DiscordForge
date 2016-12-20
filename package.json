@@ -34,9 +34,9 @@
   "author": "Perry Berman & Zach Waldron",
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/r3alcl0ud/Discord-Forge/issues"
+    "url": "https://github.com/r3alcl0ud/DiscordForge/issues"
   },
-  "homepage": "https://github.com/r3alcl0ud/Discord-Forge#readme",
+  "homepage": "https://github.com/r3alcl0ud/DiscordForge#readme",
   "engines": {
     "node": ">=6.0.0"
   }

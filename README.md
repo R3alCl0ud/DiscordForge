@@ -1,4 +1,4 @@
-# Discord-Forge
+# DiscordForge
 [![NPM](https://nodei.co/npm/DiscordForge.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/DiscordForge/)
 
 [![Build Status](https://travis-ci.org/R3alCl0ud/DiscordForge.svg?branch=master)](https://travis-ci.org/R3alCl0ud/DiscordForge)
