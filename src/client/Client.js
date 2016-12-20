@@ -53,7 +53,7 @@ class Client extends DiscordJS.Client {
     if (this.options.defaultHelp === true) {
       this.registry.registerCommand(new DefaultHelp(this.registry));
     }
-    if (this.options.hasOwnProperty('getConfigOption') && this.options.hasOwnProperty('setConfigOption')) {
+    if (this.options.getConfigOption !== null && this.options.setConfigOption !== null) {
       this.getConfigOption = this.options.getConfigOption;
       this.setConfigOption = this.options.setConfigOption;
     }

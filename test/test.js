@@ -57,7 +57,7 @@ Client.on('ready', () => {
   console.log(`Bot: ${Client.user.bot}`);
   console.log(`Guilds: ${Client.guilds.size}`);
   console.log(`Channels: ${Client.channels.size}`);
-  Client.user.setAvatar("./Discord-Forge-Square.png");
+  // Client.user.setAvatar("./Discord-Forge-Square.png");
 });
 
 Client.on('error', console.log);

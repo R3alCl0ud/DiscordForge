@@ -1,7 +1,7 @@
 # Discord-Forge
 [![NPM](https://nodei.co/npm/DiscordForge.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/DiscordForge/)
 
-[![Build Status](https://travis-ci.org/R3alCl0ud/Discord-Forge.svg?branch=master)](https://travis-ci.org/R3alCl0ud/Discord-Forge)
+[![Build Status](https://travis-ci.org/R3alCl0ud/DiscordForge.svg?branch=master)](https://travis-ci.org/R3alCl0ud/DiscordForge)
 A highly extensible command client for discord.js
 # Example Usage
 
@@ -30,3 +30,5 @@ Client.registry.registerCommand(new evalCommand(Client.registry));
 Client.login("email", "password").catch(console.log);
 
 ```
+
+Documentation: https://r3alcl0ud.github.io/DiscordForge/0.3.8/

@@ -14,7 +14,6 @@ class CommandHandler {
     if (channel.type === 'group') return this.handleGroupDM(message, author, channel);
     if (channel.type === 'dm') return this.handleDM(message, author, channel);
     let cmdArgs = message.content.split(' ');
-
     if (channel.type === 'text') {
       if (cmdArgs[0].substring(0, this.client.options.prefix.length) !== this.client.options.prefix) return this.client.emit('plainMessage', message);
 
@@ -44,7 +43,7 @@ class CommandHandler {
     if (cmdArgs[0].substring(0, this.client.options.prefix.length) !== this.client.options.prefix) this.client.emit('plainMessage', message);
     const command = this.getCommand(message);
     if (command) {
-      if (command.guildOnly === true) return this.client.emit('plainMessage', message);;
+      if (command.guildOnly === true) return this.client.emit('plainMessage', message);
       if (typeof command.message === 'string') {
         group.sendMessage(command.message);
       } else if (typeof command.message === 'function') {
