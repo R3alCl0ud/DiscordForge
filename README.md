@@ -31,4 +31,4 @@ Client.login("email", "password").catch(console.log);
 
 ```
 
-Documentation: https://r3alcl0ud.github.io/DiscordForge/0.3.8/
+Documentation: https://r3alcl0ud.github.io/DiscordForge/master/
