@@ -8,7 +8,7 @@ function build {
 }
 
 function getJsonVal () {
-    python -c "import json,sys;sys.stdout.write(json.dumps(json.load(sys.stdin)$1, sort_keys=True, indent=4))";
+    python -c "import json,sys;sys.stdout.write(json.dumps(json.load(sys.stdin)$1))";
 }
 
 # Ignore Travis checking PRs
@@ -50,7 +50,7 @@ build
 # Move the generated JSON file to the newly-checked-out repo, to be committed
 # and pushed
 
-VERSION=`cat package.json | getJsonVal "['version']"`
+VERSION=`cat package.json | getJsonVal "['version']" | tr -d '"'`
 
 mv -v docs/DiscordForge/$VERSION/* out/$SOURCE
 
