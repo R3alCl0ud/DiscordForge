@@ -2,8 +2,7 @@ const Forge = require('../src');
 const auth = require('./auth.json');
 const ExamplePlugin = require('./selfPlugin');
 const Client = new Forge.Client({ prefix: "//", guildConfigs: true });
-
-console.log(auth);
+const { Readable, Writable } = require('stream');
 class testCommand extends Forge.Command {
   constructor(commandRegistry) {
     super("test", "This is a test", commandRegistry);
@@ -57,7 +56,19 @@ Client.on('ready', () => {
   console.log(`Bot: ${Client.user.bot}`);
   console.log(`Guilds: ${Client.guilds.size}`);
   console.log(`Channels: ${Client.channels.size}`);
-  // Client.user.setAvatar("./Discord-Forge-Square.png");
+  let con1, r1, con2, r2;
+  Client.channels.get("186722850353315841").join().then(v1 => {
+    r1 = v1.createReceiver();
+    Client.channels.get("245752795884552192").join().then(v2 => {
+      r2 = v2.createReceiver();
+      v1.on('speaking', (u,b) => {
+        if (b) u.bot ? v2.playStream(r1.opusStreams.get(u.id) || r1.createOpusStream(u), {volume: 1}) :  v2.playConvertedStream(r1.pcmStreams.get(u.id) || r1.createPCMStream(u));
+      });
+      v2.on('speaking', (u,b) => {
+        if (b) u.bot ? v1.playStream(r2.opusStreams.get(u.id) || r2.createOpusStream(u), {volume: 1}) :  v1.playConvertedStream(r2.pcmStreams.get(u.id) || r2.createPCMStream(u));
+      });
+    });
+  });
 });
 
 Client.on('error', console.log);
