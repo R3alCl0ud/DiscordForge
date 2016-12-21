@@ -112,49 +112,26 @@ class CommandHandler {
    * Checks if a message is a command
    * @param {Message} message The message to get the command from
    * @param {boolean} guildConfigs Whether or not custom configs is enabled
-   * @returns {Command|undefined}
+   * @returns {?Command}
    */
   getCommand(message, guildConfigs = false) {
     let command;
+    let args = message.content.split(' ');
+    let label = guildConfigs ? args[0].substring(message.guild.prefix.length) : args[0].substring(this.client.options.prefix.length);
     if (guildConfigs) {
-      let args = message.content.split(' ');
-      let label = args[0].substring(message.guild.prefix.length);
-      if ((command = message.guild.commands.get(label)) !== undefined) return command;
-      label = this.client.registry.aliases.get(label) || label;
-      if ((command = this.client.registry.commands.get(label)) !== undefined || ((command = this.client.registry.commands.get(label.toLowerCase())) !== undefined && !command.caseSensitive)) {
-        if (args.length > 1) return this.getSubCommand(args.splice(0, 1), command);
-        return command;
-      }
+      message.guild.commands.forEach(cmd => { command = this.testComparator(cmd, label) ? cmd : undefined; });
+      this.client.registry.commands.forEach(cmd => command = this.testComparator(cmd, label) ? cmd : undefined);
       this.client.registry.plugins.forEach(plugin => {
-        if (message.guild.enabledPlugins.indexOf(plugin.id) !== -1) {
-          if ((command = plugin.commands.get(label)) !== undefined || ((command = plugin.commands.get(label.toLowerCase())) !== undefined && !command.caseSensitive)) {
-            if (args.length > 1) return this.getSubCommand(args.splice(0, 1), command);
-            return command;
-          }
-        }
-        return undefined;
+        if (message.guild.enabledPlugins.indexOf(plugin.id) !== -1) plugin.commands.forEach(cmd => { command = this.testComparator(cmd, label) ? cmd : undefined; });
       });
-      return command;
     } else {
-      let args = message.content.split(' ');
-      let label = args[0].substring(this.client.options.prefix.length);
-
-      label = this.client.registry.aliases.get(label) || label;
-      if ((command = this.client.registry.commands.get(label)) !== undefined || ((command = this.client.registry.commands.get(label.toLowerCase())) !== undefined && !command.caseSensitive)) {
-        if (args.length > 1) return this.getSubCommand(args.splice(0, 1), command);
-        return command;
-      }
-
+      this.client.registry.commands.forEach(cmd => command = this.testComparator(cmd, label) ? cmd : undefined);
       this.client.registry.plugins.forEach(plugin => {
-        label = plugin.aliases.get(label) || label;
-        if (((command = plugin.commands.get(label)) !== undefined) || (((command = plugin.commands.get(label.toLowerCase())) !== undefined) && !command.caseSensitive)) {
-          if (args.length > 1) return this.getSubCommand(args.splice(0, 1), command);
-          return command;
-        }
-        return undefined;
+        plugin.commands.forEach(cmd => { command = this.testComparator(cmd, label) ? cmd : undefined; });
       });
-      return command;
     }
+    if (args.length > 1) return this.getSubCommand(args.splice(0, 1), command);
+    return command;
   }
 
   getSubCommand(args, command) {
@@ -165,6 +142,24 @@ class CommandHandler {
       return subCommand;
     }
     return command;
+  }
+
+  testComparator(cmd, label) {
+    let command;
+    if (typeof cmd.comparator === 'string') {
+      if (label === cmd.comparator) command = cmd;
+    } else if (cmd.comparator instanceof RegExp) {
+      if (cmd.comparator.test(label)) command = cmd;
+    } else if (cmd.comparator instanceof Array) {
+      cmd.comparator.forEach(comp => {
+        if (typeof comp === 'string') {
+          if (label === comp) command = cmd;
+        } else if (comp instanceof RegExp) {
+          if (comp.test(label)) command = cmd;
+        }
+      });
+    }
+    return !!command;
   }
 }
 

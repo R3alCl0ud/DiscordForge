@@ -31,15 +31,6 @@ class Plugin extends EventEmitter {
       this.description = description;
     }
     this._commands = new Collection();
-    this.aliases = new Collection();
-  }
-  /**
-   *
-   * @param {Command} command The command to set an alias for
-   * @param {string} alias The alias to be set
-   */
-  registerAlias(command, alias) {
-    this.aliases.set(alias, command.id);
   }
   /**
    * Registers a command to the plugin

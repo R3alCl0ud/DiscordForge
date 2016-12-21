@@ -8,6 +8,7 @@ const DiscordJS = require('discord.js');
  * @property {boolean} [guildOnly=false] Whether or not the command can only be ran in a guild text channel. Cannot be true if dmOnly is true
  * @property {string} [description=Default Description] The description of the command
  * @property {string} [usage=command ID] The usage for the command
+ * @property {string|regex|function|Array<string>} [comparator=none] A string/regex to test the incoming message against, or function that returns a boolean, or and array of strings
  */
 
 /**
@@ -17,15 +18,16 @@ class Command {
   /**
    * @param {string} id The ID of the command.
    * @param {MessageGenerator|string|falsy} msgGenerator function.
-   * @param {Object} parent This can be a guild, plugin. This should be a command if you are registering a SubCommand.
    * @param {CommandOptions} options Option t be passed to the command.
+   * @param {Command} parent Command will only have a parent if it is registered as a sub command
    */
-  constructor(id, msgGenerator, parent, options = {}) {
+  constructor(id, msgGenerator, options = {}, parent) {
     /**
-     * The Parent of the command
-     * @type {(Plugin|Command|Guild)}
+     * The parent command, If the command is a sub command
+     * @type {?Command}
+     * @private
      */
-    this.Parent = parent;
+    this.parent = parent;
 
     /**
      * The ID of the command
@@ -143,12 +145,8 @@ class Command {
       }
     }
     if (alias instanceof Array) {
-      alias.forEach(name => {
-        this.Parent.registerAlias(this, this.caseSensitive ? name : name.toLowerCase());
-        if (this.names.indexOf(name) === -1) this.names.push(this.caseSensitive ? name : name.toLowerCase());
-      });
+      alias.forEach(name => this.names.indexOf(name) === -1 ? this.names.push(this.caseSensitive ? name : name.toLowerCase()) : null);
     } else if (typeof alias === 'string') {
-      this.Parent.registerAlias(this, this.caseSensitive ? alias : alias.toLowerCase());
       if (this.names.indexOf(alias) === -1) this.names.push(this.caseSensitive ? alias : alias.toLowerCase());
     }
     return new Error('Alias must be a string or an array of strings');
