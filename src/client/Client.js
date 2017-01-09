@@ -12,6 +12,7 @@ const DefaultHelpSub = require('../DefaultHelp').helpSub;
  * @property {string} [prefix='/'] The default prefix to use for a guild
  * @property {boolean} [selfBot=false] Whether or not the client is a selfbot.
  * @property {boolean} [guildConfigs=false] Whether or not the client should use per guild configs.
+ * @property {boolean} [defaultHelp=true] Whether or not the client should use the default help command.
  * @property {Array<string>} [enabledPlugins=[]] Array of the IDs of plugins that should be enabled by default
  * @property {function} [getConfigOption=null] Optional custom function for retreiving guild config options
  * must except the same parameters as the default one, must return a Promise
@@ -57,7 +58,7 @@ class Client extends DiscordJS.Client {
       this.getConfigOption = this.options.getConfigOption;
       this.setConfigOption = this.options.setConfigOption;
     }
-
+    this.defaultHelp = this.defaultHelp === undefined ? true : this.defaultHelp;
     this.on('updateCommand', this.loadHelp.bind(this));
   }
 

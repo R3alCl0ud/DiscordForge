@@ -7,7 +7,7 @@ class help extends Command {
   }
 
   message(message, author, channel, guild, client) {
-    const helpText = [`Showing command list for **${author.username}**\n`];
+    const helpText = [`Showing command list for **${author.displayName}**\n`];
     helpText.push('**Global Commands**');
     client.registry.commands.forEach(command => {
       if (command.id !== 'help') {
@@ -38,7 +38,7 @@ class help extends Command {
 
 class helpSub extends Command {
   constructor(command, Help) {
-    super(command.id, null, Help);
+    super(command.id, null, {}, Help);
     this.setAlias(command.names);
     this.usage = command.usage;
     this.description = command.description;
