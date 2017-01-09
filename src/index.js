@@ -74,3 +74,8 @@ Guild.applyToClass(DiscordJS.Guild);
  * @external Collection
  * @see {@link http://hydrabolt.github.io/discord.js/#!/docs/tag/indev/class/Collection}
  */
+
+/**
+ * @external EvaluatedPermissions
+ * @see {@link http://discord.js.org/#/docs/main/indev-prism/class/EvaluatedPermissions}
+ */

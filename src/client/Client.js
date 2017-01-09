@@ -82,7 +82,7 @@ class Client extends DiscordJS.Client {
   }
 
   handleCommands() {
-    this.on('message', message => this.commandHandler.handleMessage(message, message.author, message.channel, message.guild));
+    this.on('message', message => this.commandHandler.handleMessage(message, message.member, message.channel, message.guild));
   }
 
   /**

@@ -6,12 +6,12 @@ A highly extensible command client for discord.js
 # Example Usage
 
 ```js
-const Forge = require('DiscordForge');
-const Client = new Forge.Client({selfBot: true, prefix: "/"});
+const { Client, Command } = Forge = require('DiscordForge');
+const ForgeClient = new Client({selfBot: true, prefix: "/"});
 
-class evalCommand extends Forge.Command {
+class evalCommand extends Command {
   constructor(registry) {
-    super("eval", null, registry);
+    super("eval", null);
   }
   message(message, author, channel, guild, client) {
     try {
@@ -22,13 +22,13 @@ class evalCommand extends Forge.Command {
     }
   }
 }
-Client.on('ready', () => {
+ForgeClient.on('ready', () => {
   console.log('Ready');
 })
 
-Client.registry.registerCommand(new evalCommand(Client.registry));
-Client.login("email", "password").catch(console.log);
+ForgeClient.registry.registerCommand(new evalCommand());
+ForgeClient.login("email", "password").catch(console.log);
 
 ```
 
-Documentation: https://r3alcl0ud.github.io/DiscordForge/master/
+[Documentation](https://r3alcl0ud.github.io/DiscordForge/master/)

@@ -67,6 +67,7 @@ class CommandHandler {
     const command = this.getCommand(message);
     if (command) {
       if (command.guildOnly === true) return false;
+      // if (this.testPermissions(command, author))
       if (typeof command.message === 'string') {
         dmChannel.sendMessage(command.message);
       } else if (typeof command.message === 'function') {
@@ -160,6 +161,10 @@ class CommandHandler {
       });
     }
     return !!command;
+  }
+
+  testPermissions(cmd, member) {
+    return true;
   }
 }
 
