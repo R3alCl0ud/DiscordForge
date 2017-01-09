@@ -2,8 +2,8 @@ const Command = require('./structures/Command');
 const Tab = '    ';
 
 class help extends Command {
-  constructor(registry) {
-    super('help', null, registry);
+  constructor() {
+    super('help', null);
   }
 
   message(message, author, channel, guild, client) {
