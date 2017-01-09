@@ -158,9 +158,9 @@ class Command {
       }
     }
     if (alias instanceof Array) {
-      alias.forEach(name => this.names.indexOf(name) === -1 ? this.names.push(this.caseSensitive ? name : name.toLowerCase()), this._comparator.push(this.caseSensitive ? name : name.toLowerCase()) : null);
+      alias.forEach(name => this.names.indexOf(name) === -1 ? this._comparator.push(this.caseSensitive ? name : name.toLowerCase()) : null);
     } else if (typeof alias === 'string') {
-      if (this.names.indexOf(alias) === -1) this.names.push(this.caseSensitive ? alias : alias.toLowerCase()), this._comparator.push(this.caseSensitive ? alias : alias.toLowerCase());
+      if (this.names.indexOf(alias) === -1) this._comparator.push(this.caseSensitive ? alias : alias.toLowerCase());
     }
     return new Error('Alias must be a string or an array of strings');
   }
