@@ -34,13 +34,13 @@ Guild.applyToClass(DiscordJS.Guild);
 
 /**
  * Emmited when a non command message is received
- * @event ForgeClient#plainMessage
+ * @event Client#plainMessage
  * @param {Message} Message The message received
  */
 
 /**
  * Emmited when a command has been ran
- * @event ForgeClient#command
+ * @event Client#command
  * @param {Command} Command The command that was ran
  */
 
