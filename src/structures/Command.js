@@ -86,10 +86,19 @@ class Command {
     for (const option of Object.keys(options)) {
       if (option === 'guildOnly') {
         if (!this.dmOnly === true) this.guildOnly = false;
+      } else if (option === 'comparator') {
+        this._comparator = options[option];
       } else {
         this[option] = options[option];
       }
     }
+
+    /**
+     *
+     * @type {string|regex|function|Array<string>} [comparator=none] A string/regex to test the incoming message against, or function that returns a boolean, or and array of strings
+     * @readonly
+     */
+    this._comparator = this._comparator || this.id;
 
     /**
      * Collection of subCommands
@@ -153,7 +162,7 @@ class Command {
   }
   /**
    * Registers an alias for this command
-   * @param {string|Array<string>} alias t
+   * @param {string|Array<string>} alias A string or array of strings to set as an alias for the command
    */
   setAlias(alias) {
     this._addAlias(alias);
@@ -165,6 +174,10 @@ class Command {
     } else {
       return this.Parent.aliases.get(this._id);
     }
+  }
+
+  get comparator() {
+    return this._comparator;
   }
 
   get responses() {
