@@ -10,7 +10,11 @@ function openJSON(JSONFile) {
   return new Promise((resolve, reject) => {
     fs.readFile(JSONFile, 'utf8', (err, data) => {
       if (err) return reject(err);
-      return resolve(JSON.parse(data));
+      try {
+        return resolve(JSON.parse(data));
+      } catch (e) {
+        return reject(e);
+      }
     });
   });
 }
