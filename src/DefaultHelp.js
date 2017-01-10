@@ -7,7 +7,7 @@ class help extends Command {
   }
 
   message(message, author, channel, guild, client) {
-    const helpText = [`Showing command list for **${author.displayName}**\n`];
+    const helpText = [`Showing command list for **${message.member.displayName}**\n`];
     helpText.push('**Global Commands**');
     client.registry.commands.forEach(command => {
       if (command.id !== 'help') {
