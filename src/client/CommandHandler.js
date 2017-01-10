@@ -131,7 +131,7 @@ class CommandHandler {
         plugin.commands.forEach(cmd => { command = this.testComparator(cmd, label) ? cmd : label === cmd.id ? cmd : command; });
       });
     }
-    if (args.length > 1) return this.getSubCommand(args.splice(0, 1), command);
+    if (args.length > 1 && command !== undefined) return this.getSubCommand(args.splice(0, 1), command);
     return command;
   }
 
@@ -139,7 +139,7 @@ class CommandHandler {
     let id = command.subCommandAliases.get(args[0]) || args[0];
     let subCommand;
     if (((subCommand = command.subCommands.get(id)) !== undefined) || ((subCommand = command.subCommands.get(id.toLowerCase())) !== undefined && !subCommand.caseSensitive)) {
-      if (args.length > 1) return this.getSubCommand(args.splice(0, 1), command);
+      if (args.length > 1) return this.getSubCommand(args.splice(0, 1), subCommand);
       return subCommand;
     }
     return command;
