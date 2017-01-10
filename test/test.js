@@ -1,7 +1,7 @@
 const Forge = require('../src');
 const auth = require('./auth.json');
 const ExamplePlugin = require('./selfPlugin');
-const Client = new Forge.Client({ prefix: "//", guildConfigs: true });
+const Client = new Forge.Client({ prefix: "//", guildConfigs: false});
 const { Readable, Writable } = require('stream');
 class testCommand extends Forge.Command {
   constructor(commandRegistry) {
@@ -76,8 +76,8 @@ Client.on('debug', console.log);
 
 Client.login(auth.token).then(() => {
   console.log("Logged in");
-  Client.registry.registerCommand(new testChangeConfig(Client.registry));
-  Client.registry.registerCommand(new testPrefix(Client.registry));
+  // Client.registry.registerCommand(new testChangeConfig(Client.registry));
+  // Client.registry.registerCommand(new testPrefix(Client.registry));
   // Client.registry.registerCommand(new evalCommand(Client.registry));
   Client.registry.registerPlugin(new ExamplePlugin(Client));
   console.info(Client.registry.plugins.get("testPlugin").comands);

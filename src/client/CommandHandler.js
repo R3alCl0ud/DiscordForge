@@ -138,8 +138,8 @@ class CommandHandler {
   getSubCommand(args, command) {
     let id = command.subCommandAliases.get(args[0]) || args[0];
     let subCommand;
-    if (((subCommand = command.subCommands.get(id)) !== undefined) || ((subCommand = command.subCommands.get(id.toLowerCase())) !== undefined && !subCommand.caseSensitive)) {
-      if (args.length > 1) return this.getSubCommand(args.splice(0, 1), subCommand);
+    if (((subCommand = command.subCommands.get(id)) !== undefined) || ((subCommand = command.subCommands.get(id.toLowerCase())) !== undefined && subCommand.caseSensitive === false)) {
+      if (args.length > 1 && subCommand !== undefined) return this.getSubCommand(args.splice(0, 1), subCommand);
       return subCommand;
     }
     return command;
