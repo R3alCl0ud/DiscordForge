@@ -53,6 +53,7 @@ class ForgeRegistry {
   registerCommand(command) {
     if (command instanceof Command) {
       this.commands.set(command.id, command);
+      if (this.client.options.defaultHelp === true) this.client.loadHelp(command);
     }
   }
 
