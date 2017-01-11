@@ -52,6 +52,12 @@ Client.on('reconnecting', () => {
   console.log("reconnect");
 });
 
+function handleHelp() {
+  Client.registry.plugins.forEach(plugin => {
+    plugin.commands.forEach(Client.loadHelp.bind(Client));
+  });
+}
+
 Client.on('ready', () => {
   console.log(`Bot: ${Client.user.bot}`);
   console.log(`Guilds: ${Client.guilds.size}`);
@@ -80,5 +86,6 @@ Client.login(auth.token).then(() => {
   // Client.registry.registerCommand(new testPrefix(Client.registry));
   // Client.registry.registerCommand(new evalCommand(Client.registry));
   Client.registry.registerPlugin(new ExamplePlugin(Client));
+  // handleHelp();
   console.info(Client.registry.plugins.get("testPlugin").comands);
 }).catch(console.log);

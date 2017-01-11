@@ -4,9 +4,17 @@ const Tab = '    ';
 class help extends Command {
   constructor() {
     super('help', null);
+    this.loaded = false;
   }
 
   message(message, author, channel, guild, client) {
+    if (!this.loaded) {
+      client.registry.plugins.forEach(plugin => {
+        plugin.commands.forEach(client.loadHelp.bind(client));
+      });
+      this.loaded = true;
+    }
+
     const helpText = [`Showing command list for **${message.member.displayName}**\n`];
     helpText.push('**Global Commands**');
     client.registry.commands.forEach(command => {

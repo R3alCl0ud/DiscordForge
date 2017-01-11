@@ -33,6 +33,7 @@ class ForgeRegistry {
     if (plugin instanceof Plugin) {
       this.plugins.set(plugin.id, plugin);
       plugin.emit('load', this.client);
+      if (this.client.options.defaultHelp === true) plugin.commands.forEach(this.client.loadHelp.bind(this.client));
     }
   }
 

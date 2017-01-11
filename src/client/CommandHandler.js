@@ -116,7 +116,7 @@ class CommandHandler {
    * @returns {?Command}
    */
   getCommand(message, guildConfigs = false) {
-    let command;
+    let command = null;
     let args = message.content.split(' ');
     let label = guildConfigs ? args[0].substring(message.guild.prefix.length) : args[0].substring(this.client.options.prefix.length);
     if (guildConfigs) {
@@ -131,7 +131,9 @@ class CommandHandler {
         plugin.commands.forEach(cmd => { command = this.testComparator(cmd, label) ? cmd : label === cmd.id ? cmd : command; });
       });
     }
-    if (args.length > 1 && command !== undefined) return this.getSubCommand(args.splice(0, 1), command);
+    args.splice(0, 1);
+    console.log(args);
+    if (args.length > 0 && command !== null) return this.getSubCommand(args, command);
     return command;
   }
 
@@ -139,7 +141,9 @@ class CommandHandler {
     let id = command.subCommandAliases.get(args[0]) || args[0];
     let subCommand;
     if (((subCommand = command.subCommands.get(id)) !== undefined) || ((subCommand = command.subCommands.get(id.toLowerCase())) !== undefined && subCommand.caseSensitive === false)) {
-      if (args.length > 1 && subCommand !== undefined) return this.getSubCommand(args.splice(0, 1), subCommand);
+      args.splice(0, 1);
+      console.log(args);
+      if (args.length >= 1 && subCommand !== undefined) return this.getSubCommand(args, subCommand);
       return subCommand;
     }
     return command;

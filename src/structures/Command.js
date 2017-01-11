@@ -18,9 +18,9 @@ const DiscordJS = require('discord.js');
 class Command {
   /**
    * @param {string} id The ID of the command.
-   * @param {MessageGenerator|string|falsy} msgGenerator function.
-   * @param {CommandOptions} options Option t be passed to the command.
-   * @param {Command} parent Command will only have a parent if it is registered as a sub command
+   * @param {?MessageGenerator|string|falsy} msgGenerator function.
+   * @param {?CommandOptions} options Option to be passed to the command.
+   * @param {?Command} parent Command will only have a parent if it is registered as a sub command
    */
   constructor(id, msgGenerator, options = {}, parent) {
     /**
@@ -131,7 +131,7 @@ class Command {
     if (CommandOrId instanceof Command) {
       this.subCommands.set(CommandOrId.id, CommandOrId);
     } else if (typeof CommandOrId === 'string') {
-      this.subCommands.set(CommandOrId, new Command(CommandOrId, msgGenerator, this, options));
+      this.subCommands.set(CommandOrId, new Command(CommandOrId, msgGenerator, options, this));
     }
   }
 
