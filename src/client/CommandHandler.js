@@ -121,7 +121,7 @@ class CommandHandler {
     let label = guildConfigs ? args[0].substring(message.guild.prefix.length) : args[0].substring(this.client.options.prefix.length);
     if (guildConfigs) {
       message.guild.commands.forEach(cmd => { command = this.testComparator(cmd, label) ? cmd : label === cmd.id ? cmd : command; });
-      this.client.registry.commands.forEach(cmd => command = this.testComparator(cmd, label) ? cmd : label === cmd.id ? cmd : command);
+      this.client.registry.commands.forEach(cmd => { command = this.testComparator(cmd, label) ? cmd : label === cmd.id ? cmd : command; });
       this.client.registry.plugins.forEach(plugin => {
         if (message.guild.enabledPlugins.indexOf(plugin.id) !== -1) plugin.commands.forEach(cmd => { command = this.testComparator(cmd, label) ? cmd : label === cmd.id ? cmd : command; });
       });
@@ -163,9 +163,9 @@ class CommandHandler {
     return !!command;
   }
 
-  testPermissions(cmd, member) {
-    return true;
-  }
+  // testPermissions(cmd/*, member*/) {
+    // return true;
+  // }
 }
 
 

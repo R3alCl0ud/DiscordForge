@@ -71,14 +71,12 @@ class Client extends DiscordJS.Client {
    * @param {Command} command The command to register help for
    */
   loadHelp(command) {
-    const help = this.registry.commands.get('help') || new DefaultHelp(this, this.registry);
+    const help = this.registry.commands.get('help') || new DefaultHelp();
     if (this.options.defaultHelp === true) {
-      if (!this.registry.commands.has('help')) {
-        this.registry.registerCommand(help);
-        command.subCommands.forEach(sub => {
-          help.registerSubCommand(new DefaultHelpSub(sub, help));
-        });
-      }
+      if (!this.registry.commands.has('help')) this.registry.registerCommand(help);
+      command.subCommands.forEach(sub => {
+        help.registerSubCommand(new DefaultHelpSub(sub, help));
+      });
     }
   }
 

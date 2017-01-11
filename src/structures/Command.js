@@ -8,7 +8,7 @@ const DiscordJS = require('discord.js');
  * @property {boolean} [guildOnly=false] Whether or not the command can only be ran in a guild text channel. Cannot be true if dmOnly is true
  * @property {string} [description=Default Description] The description of the command
  * @property {string} [usage=command ID] The usage for the command
- * @property {EvaluatedPermissions|string|function} [permissions=@everyone] Can be a EvaluatedPermission object, a permission string, a role name, or a function that check if a user has permission to run the command __must return a boolean__.
+ * @property {EvaluatedPermissions|string|function} [permissions=@everyone] Can be a EvaluatedPermission object, a permission string, a role name, or a function __must return a boolean__.
  * @property {string|regex|function|Array<string>} [comparator=none] A string/regex to test the incoming message against, or function that returns a boolean, or and array of strings
  */
 

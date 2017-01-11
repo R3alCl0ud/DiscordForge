@@ -16,11 +16,8 @@ module.exports = {
   openJSONSync: require('./util').openJSONSync,
   writeJSONSync: require('./util').writeJSONSync,
 
-  hmsToms: require('./util').timeToMs,
-
   timeToMs: require('./util').timeToMs,
   hasRole: require('./util').hasRole,
-  hasPerms: require('./util').hasPerms,
 
   Client: require('./client/Client'),
   CommandHandler: require('./client/CommandHandler'),
@@ -28,6 +25,8 @@ module.exports = {
   Plugin: require('./structures/Plugin'),
   Command: require('./structures/Command'),
   Guild: Guild,
+
+  version: require('../package.json').version,
 
 };
 Guild.applyToClass(DiscordJS.Guild);
@@ -52,30 +51,40 @@ Guild.applyToClass(DiscordJS.Guild);
 
 /**
  * @external Message
- * @see {@link http://hydrabolt.github.io/discord.js/#!/docs/tag/indev/class/Message}
+ * @see {@link https://discord.js.org/#/docs/main/master/class/Message}
  */
 
 /**
  * @external Client
- * @see {@link http://hydrabolt.github.io/discord.js/#!/docs/tag/indev/class/Client}
+ * @see {@link https://discord.js.org/#/docs/main/master/class/Client}
  */
 
 /**
  * @external Guild
- * @see {@link http://hydrabolt.github.io/discord.js/#!/docs/tag/indev/class/Guild}
+ * @see {@link https://discord.js.org/#/docs/main/master/class/Guild}
  */
+
+ /**
+  * @external GuildMember
+  * @see {@link https://discord.js.org/#/docs/main/master/class/GuildMember}
+  */
+
+ /**
+  * @external Role
+  * @see {@link https://discord.js.org/#/docs/main/master/class/Role}
+  */
 
 /**
  * @external ClientOptions
- * @see {@link http://hydrabolt.github.io/discord.js/#!/docs/tag/indev/typedef/ClientOptions}
+ * @see {@link https://discord.js.org/#/docs/main/master/typedef/ClientOptions}
  */
 
 /**
  * @external Collection
- * @see {@link http://hydrabolt.github.io/discord.js/#!/docs/tag/indev/class/Collection}
+ * @see {@link https://discord.js.org/#/docs/main/master/class/Collection}
  */
 
 /**
  * @external EvaluatedPermissions
- * @see {@link http://discord.js.org/#/docs/main/indev-prism/class/EvaluatedPermissions}
+ * @see {@link https://discord.js.org/#/docs/main/master/class/EvaluatedPermissions}
  */
