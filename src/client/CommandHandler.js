@@ -132,7 +132,6 @@ class CommandHandler {
       });
     }
     args.splice(0, 1);
-    console.log(args);
     if (args.length > 0 && command !== null) return this.getSubCommand(args, command);
     return command;
   }
@@ -142,7 +141,6 @@ class CommandHandler {
     let subCommand;
     if (((subCommand = command.subCommands.get(id)) !== undefined) || ((subCommand = command.subCommands.get(id.toLowerCase())) !== undefined && subCommand.caseSensitive === false)) {
       args.splice(0, 1);
-      console.log(args);
       if (args.length >= 1 && subCommand !== undefined) return this.getSubCommand(args, subCommand);
       return subCommand;
     }
