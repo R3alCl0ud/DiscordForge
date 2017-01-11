@@ -3,8 +3,8 @@ const Forge = require('../');
 class testPlugin extends Forge.Plugin {
   constructor() {
     super("testPlugin", "Test Plugin", "R3alCl0ud", "1.0.0", "Plugin for testing, and an example");
-    this.registerCommand(new exampleCommand(this));
-    this.registerCommand(new exampleDM(this));
+    this.registerCommand(new exampleCommand());
+    this.registerCommand(new exampleDM());
   }
 }
 

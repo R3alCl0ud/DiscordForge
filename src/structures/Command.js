@@ -1,4 +1,5 @@
 const DiscordJS = require('discord.js');
+const Constants = require('../Constants');
 
 /**
  * Options to be passed to used in a command
@@ -75,33 +76,28 @@ class Command {
 
 
     this._responses = [];
-
-    if (msgGenerator instanceof Array) {
-      msgGenerator.forEach(message => {
-        this.responses.push(message);
-      });
-    } else if (typeof msgGenerator === 'string') {
-      this.message = msgGenerator;
-    }
-
-    for (const option of Object.keys(options)) {
-      if (option === 'guildOnly') {
-        if (!this.dmOnly === true) this.guildOnly = false;
-      } else if (option === 'comparator') {
-        this._comparator = options[option];
-      } else if (option === 'permissions') {
-        this._permissions = options[option];
-      } else {
-        this[option] = options[option];
+    if (msgGenerator) {
+      if (typeof msgGenerator === 'string') {
+        this.message = msgGenerator;
+      } else if (msgGenerator instanceof Array) {
+        msgGenerator.forEach(message => {
+          this.responses.push(message);
+        });
       }
     }
 
+    this.options = Constants.mergeDefaults(Constants.defaults.CommandOptions, options);
+    this.dmOnly = this.options.dmOnly;
+    this.guildOnly = this.dmOnly === true ? false : this.options.guildOnly;
+
     /**
-     *
+     * Commands comparative function
      * @type {string|regex|function|Array<string>} [comparator=none] A string/regex to test the incoming message against, or function that returns a boolean, or and array of strings
      * @readonly
      */
-    this._comparator = this._comparator || this.id;
+    this._comparator = this.options.comparator || this.id;
+
+    this._permissions = this.options.permissions;
 
     /**
      * Collection of subCommands
@@ -115,11 +111,6 @@ class Command {
      */
     this.subCommandAliases = new DiscordJS.Collection();
 
-    if (this.names && this.names instanceof Array) {
-      this._addAlias(this.names);
-    } else if (this.names && typeof this.names === 'string') {
-      this._addAlias(this.names);
-    }
   }
   /**
    * Registers a command

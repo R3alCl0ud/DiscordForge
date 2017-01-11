@@ -8,6 +8,13 @@ exports.defaults = {
     getConfigOption: null,
     setConfigOption: null,
   },
+  CommandOptions: {
+    caseSensitive: true,
+    dmOnly: false,
+    guildOnly: false,
+    description: 'Default Description',
+    permissions: '@everyone',
+  },
 };
 
 function mergeDefaults(def, given) {

@@ -72,17 +72,10 @@ class Client extends DiscordJS.Client {
   loadHelp(command) {
     const help = this.registry.commands.get('help') || new DefaultHelp();
     const HelpSub = new DefaultHelpSub(command, help);
-    const loadSubs = (cmd, helpCMD) => {
-      cmd.subCommands.forEach(sub => {
-        let helpSub = new DefaultHelpSub(sub, help);
-        helpCMD.registerSubCommand(helpSub);
-        if (sub.subCommands.size > 0) loadSubs(sub, helpSub);
-      });
-    }
     if (this.options.defaultHelp === true) {
       if (!this.registry.commands.has('help')) this.registry.registerCommand(help);
       if (!help.subCommands.has(command.id)) help.registerSubCommand(HelpSub);
-      loadSubs(command, HelpSub);
+      if (command.subCommands.size >= 1) command.subCommands.forEach(sub => HelpSub.registerSubCommand(new DefaultHelpSub(sub, HelpSub)));
     }
   }
 
