@@ -58,7 +58,7 @@ class helpSub extends Command {
 **Required Permissions or role:** ${this.perms}
 **Description:** ${this.description}
 **Usage:** \`${guild.prefix}${this.usage}\``;
-    channel.sendMessage(text, {disableEveryone: true});
+    channel.sendMessage(text, { disableEveryone: true });
   }
 }
 
