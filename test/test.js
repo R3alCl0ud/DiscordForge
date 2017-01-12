@@ -1,7 +1,7 @@
 const Forge = require('../src');
 const auth = require('./auth.json');
 const ExamplePlugin = require('./selfPlugin');
-const Client = new Forge.Client({ prefix: "//", guildConfigs: false});
+const Client = new Forge.Client({ prefix: "//", guildConfigs: false, disableEveryone: true });
 const { Readable, Writable } = require('stream');
 class testCommand extends Forge.Command {
   constructor(commandRegistry) {

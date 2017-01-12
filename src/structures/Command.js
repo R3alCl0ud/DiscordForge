@@ -110,7 +110,6 @@ class Command {
      * @type {Collection<string>}
      */
     this.subCommandAliases = new DiscordJS.Collection();
-
   }
   /**
    * Registers a command

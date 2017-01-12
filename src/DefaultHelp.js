@@ -50,9 +50,15 @@ class helpSub extends Command {
     this.setAlias(command.names);
     this.usage = command.usage;
     this.description = command.description;
+    this.perms = command.permissions;
   }
   message(message, author, channel, guild) {
-    channel.sendMessage(`**Showing more info for:** \`${this.id}\`\n**Aliases:** ${this.names}\n**Description:** ${this.description}\n**Usage:** \`${guild.prefix}${this.usage}\``);
+    let text = `**Showing more info for:** \`${this.id}\`
+**Aliases:** ${this.names + this.comparator.join(', ')}
+**Required Permissions or role:** ${this.perms}
+**Description:** ${this.description}
+**Usage:** \`${guild.prefix}${this.usage}\``;
+    channel.sendMessage(text, {disableEveryone: true});
   }
 }
 
