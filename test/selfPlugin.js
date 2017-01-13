@@ -10,7 +10,7 @@ class testPlugin extends Forge.Plugin {
 
 class exampleCommand extends Forge.Command {
   constructor(plugin) {
-    super("example", null);
+    super('example');
   }
   message(message, author, channel, guild, client) {
     channel.sendMessage("seems to work");
@@ -18,8 +18,8 @@ class exampleCommand extends Forge.Command {
 }
 
 class exampleDM extends Forge.Command {
-  constructor(plugin) {
-    super("dmTest", null, {dmOnly: true});
+  constructor() {
+    super("dmTest", {dmOnly: true});
   }
   message(message, author, channel, client) {
     message.edit("This was a test");

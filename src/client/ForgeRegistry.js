@@ -15,6 +15,7 @@ class ForgeRegistry {
     this.plugins = new Collection();
     this.commands = new Collection();
     this.aliases = new Collection();
+    
   }
 
   /**

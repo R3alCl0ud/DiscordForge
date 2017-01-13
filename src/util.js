@@ -70,8 +70,8 @@ function timeToMs(time) {
 
 /**
  * Checks if a GuildMember has a certain Role
- * @param {GuildMember} member The GuildMember to check for a role.
- * @param {Role} role The Role to look for.
+ * @param {external:GuildMember} member The GuildMember to check for a role.
+ * @param {external:Role} role The Role to look for.
  * @returns {boolean}
  */
 function hasRole(member, role) {

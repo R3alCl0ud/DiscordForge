@@ -23,7 +23,7 @@ const DefaultHelpSub = require('../DefaultHelp').helpSub;
 
 /**
  * The ForgeClient
- * @extends {Client}
+ * @extends {external:Client}
  */
 class Client extends DiscordJS.Client {
 

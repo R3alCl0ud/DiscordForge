@@ -12,14 +12,12 @@
         "plugins/markdown"
     ],
     "templates": {
-        "cleverLinks": false,
+        "cleverLinks": true,
         "monospaceLinks": true,
         "useLongnameInNav": false
     },
     "opts": {
         "destination": "./docs/",
-        "encoding": "utf8",
-        "private": true,
         "recurse": true,
         "template": "./node_modules/minami"
     }

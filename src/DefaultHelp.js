@@ -47,11 +47,12 @@ class help extends Command {
 class helpSub extends Command {
   constructor(command, Help) {
     super(command.id, null, {}, Help);
-    this.setAlias(command.names);
+    this.setAlias(command.comparator);
     this.usage = command.usage;
     this.description = command.description;
     this.perms = command.permissions;
   }
+
   message(message, author, channel, guild) {
     let text = `**Showing more info for:** \`${this.id}\`
 **Aliases:** ${this.names + this.comparator.join(', ')}
@@ -75,7 +76,7 @@ function getSubCommands(command, level) {
     return subs;
   }
 
-  return `${tabs}${command.id}`;
+  return `${tabs}**${command.id}**`;
 }
 
 exports.help = help;

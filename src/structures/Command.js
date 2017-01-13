@@ -9,7 +9,8 @@ const Constants = require('../Constants');
  * @property {boolean} [guildOnly=false] Whether or not the command can only be ran in a guild text channel. Cannot be true if dmOnly is true
  * @property {string} [description=Default Description] The description of the command
  * @property {string} [usage=command ID] The usage for the command
- * @property {EvaluatedPermissions|string|function} [permissions=@everyone] Can be a EvaluatedPermission object, a permission string, a role name, or a function __must return a boolean__.
+ * @property {Array.<EvaluatedPermissions>|Array.<string>|function} [permissions=@everyone] Can be a EvaluatedPermission object, a permission string, a role name, or a function __must return a boolean__.
+ * @property {string|function} [roles=@everyone] Can be a EvaluatedPermission object, a permission string, a role name, or a function __must return a boolean__.
  * @property {string|regex|function|Array<string>} [comparator=none] A string/regex to test the incoming message against, or function that returns a boolean, or and array of strings
  */
 
@@ -19,17 +20,11 @@ const Constants = require('../Constants');
 class Command {
   /**
    * @param {string} id The ID of the command.
-   * @param {?MessageGenerator|string|falsy} msgGenerator function.
    * @param {?CommandOptions} options Option to be passed to the command.
    * @param {?Command} parent Command will only have a parent if it is registered as a sub command
    */
-  constructor(id, msgGenerator, options = {}, parent) {
-    /**
-     * The parent command, If the command is a sub command
-     * @type {?Command}
-     * @private
-     */
-    this.parent = parent;
+  constructor(id, ...params) {
+    const [options, parent] = params;
 
     /**
      * The ID of the command
@@ -37,6 +32,13 @@ class Command {
      * @readonly
      */
     this.id = id;
+
+    /**
+     * The parent command, If the command is a sub command
+     * @type {?Command}
+     * @private
+     */
+    this._parent = parent;
 
     /**
      * If the command is case sensitive
@@ -63,28 +65,18 @@ class Command {
      * @type {string}
      */
     this.description = 'Default Description';
+
     /**
      * The usage of the command
      * @type {string}
      */
-    this.usage = `${this.id}`;
+    this.usage = this.parent instanceof Command ? `${this.parent.id} ${this.id}` : `${this.id}`;
+
     /**
      * The aliases of the command
      * @type {Array<string>}
      */
     this.names = [];
-
-
-    this._responses = [];
-    if (msgGenerator) {
-      if (typeof msgGenerator === 'string') {
-        this.message = msgGenerator;
-      } else if (msgGenerator instanceof Array) {
-        msgGenerator.forEach(message => {
-          this.responses.push(message);
-        });
-      }
-    }
 
     this.options = Constants.mergeDefaults(Constants.defaults.CommandOptions, options);
     this.dmOnly = this.options.dmOnly;
@@ -162,6 +154,42 @@ class Command {
     this._addAlias(alias);
   }
 
+  /**
+   * The function to be executed when the command is called from a GuildChannel
+   * @param {external:Message} message The message that is running the command
+   * @param {external:User} author The user that sent the message
+   * @param {external:GuildChannel} channel The channel the command was executed in
+   * @param {Guild} guild The guild that the command was executed in
+   * @param {Client} client The client handling the command
+   */
+  message() {
+    return;
+  }
+
+  /**
+   * The function to be executed when the command is called from a GroupDMChannel or DMChannel
+   * @param {external:Message} message The message that is running the command
+   * @param {external:User} author The user that sent the message
+   * @param {external:DMChannel|external:GroupDMChannel} channel The channel the command was executed in
+   * @param {Client} client The client handling the command
+   */
+  dmOrGroup() {
+    return;
+  }
+
+  /**
+   *
+   * @param {GuildMember} member The GuildMember to check for authorization
+   * @returns {boolean}
+   */
+  checkAuthorization() {
+    return true;
+  }
+
+  register(client) {
+    this.client = client;
+  }
+
   get aliases() {
     if (this.Parent instanceof Command) {
       return this.Parent.subCommandAliases.get(this._id);
@@ -180,6 +208,9 @@ class Command {
 
   get responses() {
     return this._responses;
+  }
+  get parent() {
+    return this._parent;
   }
 }
 
