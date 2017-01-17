@@ -2,7 +2,9 @@ language: node_js
 node_js:
     - stable
 install: npm install -g grunt-cli eslint jsdoc && npm i minami
-script: bash ./deploy.sh
+script:
+  - npm run test 
+  - bash ./deploy.sh
 env:
   global:
     - ENCRYPTION_LABEL: "977db4e2e3df"

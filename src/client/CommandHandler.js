@@ -89,19 +89,13 @@ class CommandHandler {
 
   testComparator(cmd, label) {
     let command;
-    if (typeof cmd.comparator === 'string') {
-      if (label === cmd.comparator) command = cmd;
-    } else if (cmd.comparator instanceof RegExp) {
-      if (cmd.comparator.test(label)) command = cmd;
-    } else if (cmd.comparator instanceof Array) {
-      cmd.comparator.forEach(comp => {
-        if (typeof comp === 'string') {
-          if (label === comp) command = cmd;
-        } else if (comp instanceof RegExp) {
-          if (comp.test(label)) command = cmd;
-        }
-      });
-    }
+    cmd.comparator.forEach(comp => {
+      if (typeof comp === 'string') {
+        if (label === comp) command = cmd;
+      } else if (comp instanceof RegExp) {
+        if (comp.test(label)) command = cmd;
+      }
+    });
     return !!command;
   }
 }

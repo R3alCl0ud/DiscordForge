@@ -4,14 +4,14 @@ const DiscordJS = require('discord.js');
  * Options to be passed to used in a command
  * @typedef {Object} CommandOptions
  * @property {string} id The command's id
+ * @property {string} description The description of the command
+ * @property {string} [usage=command ID] The usage for the command
+ * @property {Array.<string>} permissions Array of required permissions
+ * @property {string} role Required role name
+ * @property {Array.<string>|Array.<RegExp>} comparator an array of strings and/or Regular Expressions
  * @property {boolean} [caseSensitive=true] Whether or not the command should be case sensitive
  * @property {boolean} [dmOnly=false] Whether or not the command can only be ran in direct messages only
  * @property {boolean} [guildOnly=false] Whether or not the command can only be ran in a guild text channel. Cannot be true if dmOnly is true
- * @property {string} [description=Default Description] The description of the command
- * @property {string} [usage=command ID] The usage for the command
- * @property {Array.<string>} [permissions='SEND_MESSAGES'] Array of required permissions
- * @property {string} [role=@everyone] Required role name
- * @property {string|regex|function|Array<string>} [comparator=id] A string/regex to test the incoming message against, or function that returns a boolean, or and array of strings
  */
 
 /**
@@ -29,10 +29,12 @@ class Command {
     if (options.description === undefined) throw new Error('decription is required');
     if (options.permissions === undefined) throw new Error('permissions is required');
     if (options.role === undefined) throw new Error('role is required');
+    if (options.comparator === undefined) throw new Error('comparator is required');
     if (typeof options.id !== 'string') throw new TypeError('id must be a string');
     if (typeof options.description !== 'string') throw new TypeError('description must be a string');
     if (options.permissions instanceof Array === false) throw new TypeError('permissions must be an array');
     if (typeof options.role !== 'string') throw new TypeError('role must be a string');
+    if (options.comparator instanceof Array === false) throw new TypeError('comparator must be an array');
 
     /**
      * The ID of the command
@@ -94,10 +96,10 @@ class Command {
 
     /**
      * Commands comparative function
-     * @type {string|regex|function|Array<string>} [comparator=none] A string/regex to test the incoming message against, or function that returns a boolean, or and array of strings
+     * @type {Array.<string>|Array.<RegExp>}
      * @readonly
      */
-    this._comparator = options.comparator || this.id;
+    this._comparator = options.comparator;
 
     /**
      * Collection of subCommands

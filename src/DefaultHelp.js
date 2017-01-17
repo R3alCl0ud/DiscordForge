@@ -3,7 +3,12 @@ const Tab = '    ';
 
 class help extends Command {
   constructor() {
-    super({ id: 'help', description: 'the default help command', permissions: ['SEND_MESSAGES'], role: '@everyone' });
+    super({ id: 'help',
+        description: 'the default help command',
+        permissions: ['SEND_MESSAGES'],
+        role: '@everyone',
+        comparator: ['help'],
+      });
     this.loaded = false;
   }
 
@@ -15,7 +20,7 @@ class help extends Command {
       this.loaded = true;
     }
 
-    const helpText = [`Showing command list for **${message.member.displayName}**\n`];
+    const helpText = [`Showing command list for **${message.member ? message.member.displayName : message.author.username}**\n`];
     helpText.push('**Global Commands**');
     this.client.registry.commands.forEach(command => {
       if (command.id !== 'help') {
@@ -46,7 +51,12 @@ class help extends Command {
 
 class helpSub extends Command {
   constructor(command, Help) {
-    super({ id: command.id, description: command.description, permissions: ['SEND_MESSAGES'], role: '@everyone' }, Help);
+    super({ id: command.id,
+        description: command.description,
+        permissions: ['SEND_MESSAGES'],
+        role: '@everyone',
+        comparator: command.comparator,
+      }, Help);
     this.setAlias(command.comparator);
     this.perms = command.permissions;
   }
@@ -54,7 +64,7 @@ class helpSub extends Command {
   response(message, channel) {
     const { client, guild } = message;
     let text = `**Showing more info for:** \`${this.id}\`
-**Aliases:** ${this.names.join(', ') + this.comparator.join(', ')}
+**Aliases:** ${this.comparator.join(', ')}
 **Required Permissions and/or role:** ${this.perms.join(', ')}
 **Description:** ${this.description}
 **Usage:** \`${guild ? guild.prefix : client.options.prefix}${this.usage}\``;

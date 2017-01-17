@@ -17,7 +17,8 @@ class exampleCommand extends Forge.Command {
     super({ id: 'example',
         description: 'example command',
         permissions: ['SEND_MESSAGES'],
-        role: '@everyone'
+        role: '@everyone',
+        comparator: ['example', 'exCMD']
       });
   }
   response(message, channel, args) {

@@ -4,11 +4,11 @@ const EventEmitter = require('events').EventEmitter;
 
 /**
  * @typedef {Object} PluginDetails An Object containing required {@link Plugin} information
- * @param {string} id The ID of the Plugin
- * @param {string} name The name of the Plugin
- * @param {string} author The author of the plugin
- * @param {string} version The version of the plugin
- * @param {string} description The description of the plugin
+ * @property {string} id The ID of the Plugin
+ * @property {string} name The name of the Plugin
+ * @property {string} author The author of the plugin
+ * @property {string} version The version of the plugin
+ * @property {string} description The description of the plugin
  */
 
 /**
@@ -31,18 +31,39 @@ class Plugin extends EventEmitter {
     if (typeof details.version !== 'string') throw new TypeError('version must be a string');
     if (typeof details.description !== 'string') throw new TypeError('description must be a string');
 
+    /**
+     * The Plugin's id
+     * @type {string}
+     * @readonly
+     */
     this.id = details.id;
 
-
+    /**
+     * The Plugin's name
+     * @type {string}
+     * @readonly
+     */
     this.name = details.name;
 
-
+    /**
+     * The Plugin's author
+     * @type {string}
+     * @readonly
+     */
     this.author = details.author;
 
-
+    /**
+     * The Plugin's version
+     * @type {string}
+     * @readonly
+     */
     this.version = details.version;
 
-
+    /**
+     * The Plugin's description
+     * @type {string}
+     * @readonly
+     */
     this.description = details.description;
 
 
