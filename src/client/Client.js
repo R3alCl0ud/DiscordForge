@@ -80,7 +80,7 @@ class Client extends DiscordJS.Client {
   }
 
   handleCommands() {
-    this.on('message', message => this.commandHandler.handleMessage(message, message.author, message.channel, message.guild));
+    this.on('message', message => this.commandHandler.handleMessage(message, message.channel));
   }
 
   /**
@@ -109,7 +109,7 @@ class Client extends DiscordJS.Client {
    * @param {string|number|Array|Object} value The value to set the config property to
    */
   setConfigOption(guild, prop, value) {
-    const config = util.openJSON(`./configs/${guild.id}.json`);
+    const config = util.openJSONSync(`./configs/${guild.id}.json`);
     if (config) {
       config[prop] = value;
     } else {

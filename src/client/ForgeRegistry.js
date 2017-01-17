@@ -31,6 +31,8 @@ class ForgeRegistry {
     if (plugin instanceof Plugin) {
       this.plugins.set(plugin.id, plugin);
       plugin.loadClient(this.client);
+      if (plugin.ready === false) plugin.once('ready', plugin.loadCommands.bind(plugin));
+      else plugin.loadCommands();
       if (this.client.options.defaultHelp === true) plugin.commands.forEach(this.client.loadHelp.bind(this.client));
     }
   }

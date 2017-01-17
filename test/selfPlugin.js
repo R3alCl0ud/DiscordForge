@@ -2,17 +2,25 @@ const Forge = require('../');
 
 class testPlugin extends Forge.Plugin {
   constructor() {
-    super("testPlugin", "Test Plugin", "R3alCl0ud", "1.0.0", "Plugin for testing, and an example");
+    super({id: "testPlugin", name:"Test Plugin", author: "R3alCl0ud", version:"1.0.0", description:"Plugin for testing, and an example"});
+
+    this.emit('ready');
+  }
+
+  loadCommands() {
     this.registerCommand(new exampleCommand());
-    this.registerCommand(new exampleDM());
   }
 }
 
 class exampleCommand extends Forge.Command {
-  constructor(plugin) {
-    super('example');
+  constructor() {
+    super({ id: 'example',
+        description: 'example command',
+        permissions: ['SEND_MESSAGES'],
+        role: '@everyone'
+      });
   }
-  message(message, author, channel, guild, client) {
+  response(message, channel, args) {
     channel.sendMessage("seems to work");
   }
 }

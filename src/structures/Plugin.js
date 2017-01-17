@@ -47,6 +47,7 @@ class Plugin extends EventEmitter {
 
 
     this._commands = new Collection();
+    this.once('ready', () => { this.ready = true; });
   }
 
   loadCommands() {

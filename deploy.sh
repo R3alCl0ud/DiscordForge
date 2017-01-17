@@ -52,6 +52,8 @@ build
 
 VERSION=`cat package.json | getJsonVal "['version']" | tr -d '"'`
 
+mkdir -p out/$SOURCE
+
 rm -r out/$SOURCE
 mkdir out/$SOURCE
 mv -vf docs/DiscordForge/$VERSION/* out/$SOURCE

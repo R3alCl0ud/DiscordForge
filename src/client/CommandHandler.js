@@ -16,9 +16,9 @@ class CommandHandler {
     if (channel.type === 'text') {
       if (cmdArgs[0].substring(0, this.client.options.prefix.length) !== this.client.options.prefix) return this.client.emit('plainMessage', message);
       const command = this.getCommand(message);
-      if (command !== undefined) {
+      if (command !== null) {
         if (command.dmOnly === true) return this.client.emit('plainMessage', message);
-        command.response(message, channel, cmdArgs.splice(1));
+        if (command.checkAuthorization(message.member, channel)) command.response(message, channel, cmdArgs.splice(1));
         return this.client.emit('command', command);
       }
     }
@@ -31,8 +31,7 @@ class CommandHandler {
     const command = this.getCommand(message);
     if (command) {
       if (command.guildOnly === true) return false;
-
-      command.message(message, GroupOrDMChannel, cmdArgs.splice(1));
+      command.response(message, GroupOrDMChannel, cmdArgs.splice(1));
       return this.client.emit('command', command);
     }
     return this.client.emit('plainMessage', message);
@@ -44,7 +43,7 @@ class CommandHandler {
     const command = this.getCommand(message, true);
     if (command) {
       if (command.dmOnly === true) return this.client.emit('plainMessage', message);
-      command.message(message, channel, cmdArgs.splice(1));
+      command.response(message, channel, cmdArgs.splice(1));
       return this.client.emit('command', message, command);
     }
     return this.client.emit('plainMessage', message);
@@ -59,7 +58,7 @@ class CommandHandler {
   getCommand(message, guildConfigs = false) {
     let command = null;
     let args = message.content.split(' ');
-    let label = guildConfigs ? args[0].substring(message.guild.prefix.length) : args[0].substring(this.client.options.prefix.length);
+    let label = guildConfigs && message.guild ? args[0].substring(message.guild.prefix.length) : args[0].substring(this.client.options.prefix.length);
     if (guildConfigs) {
       message.guild.commands.forEach(cmd => { command = this.testComparator(cmd, label) ? cmd : label === cmd.id ? cmd : command; });
       this.client.registry.commands.forEach(cmd => { command = this.testComparator(cmd, label) ? cmd : label === cmd.id ? cmd : command; });

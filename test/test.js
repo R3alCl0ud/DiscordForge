@@ -1,7 +1,7 @@
 const Forge = require('../src');
 const auth = require('./auth.json');
 const ExamplePlugin = require('./selfPlugin');
-const Client = new Forge.Client({ prefix: "//", guildConfigs: false, disableEveryone: true });
+const Client = new Forge.Client({ prefix: '//', disableEveryone: true });
 const { Readable, Writable } = require('stream');
 class testCommand extends Forge.Command {
   constructor(commandRegistry) {
@@ -62,6 +62,10 @@ Client.on('ready', () => {
   console.log(`Bot: ${Client.user.bot}`);
   console.log(`Guilds: ${Client.guilds.size}`);
   console.log(`Channels: ${Client.channels.size}`);
+  Client.registry.registerPlugin(new ExamplePlugin());
+  setTimeout(() => {
+    console.info(Client.registry.plugins.get("testPlugin").commands);
+  }, 2000);
   // let con1, r1, con2, r2;
   // Client.channels.get("186722850353315841").join().then(v1 => {
   //   r1 = v1.createReceiver();
@@ -82,10 +86,5 @@ Client.on('debug', console.log);
 
 Client.login(auth.token).then(() => {
   console.log("Logged in");
-  // Client.registry.registerCommand(new testChangeConfig(Client.registry));
-  // Client.registry.registerCommand(new testPrefix(Client.registry));
-  // Client.registry.registerCommand(new evalCommand(Client.registry));
-  Client.registry.registerPlugin(new ExamplePlugin(Client));
-  // handleHelp();
-  console.info(Client.registry.plugins.get("testPlugin").comands);
+
 }).catch(console.log);

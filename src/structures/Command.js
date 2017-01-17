@@ -28,9 +28,11 @@ class Command {
     if (options.id === undefined) throw new Error('id is required');
     if (options.description === undefined) throw new Error('decription is required');
     if (options.permissions === undefined) throw new Error('permissions is required');
+    if (options.role === undefined) throw new Error('role is required');
     if (typeof options.id !== 'string') throw new TypeError('id must be a string');
     if (typeof options.description !== 'string') throw new TypeError('description must be a string');
-    if (options.description instanceof Array === false) throw new TypeError('permissions must be an array');
+    if (options.permissions instanceof Array === false) throw new TypeError('permissions must be an array');
+    if (typeof options.role !== 'string') throw new TypeError('role must be a string');
 
     /**
      * The ID of the command
@@ -57,7 +59,7 @@ class Command {
      * @type {boolean}
      * @readonly
      */
-    this.dmOnly = !!options.dmOnly;
+    this.dmOnly = options.dmOnly !== undefined ? !!options.dmOnly : false;
 
     /**
      * If the command can only be used in a guild channel. Cannot be true is dmOnly is true.
@@ -86,6 +88,10 @@ class Command {
 
     this.registered = false;
 
+    this.permissions = options.permissions;
+
+    this.role = options.role;
+
     /**
      * Commands comparative function
      * @type {string|regex|function|Array<string>} [comparator=none] A string/regex to test the incoming message against, or function that returns a boolean, or and array of strings
@@ -107,16 +113,11 @@ class Command {
   }
   /**
    * Registers a command
-   * @param {Command|string} CommandOrId The subCommand to register or the id to use
-   * @param {function|string|Array<string|function>|falsy} [msgGenerator] The how to respond to the message
-   * @param {CommandOptions} [options] The options to pass to the subCommand
+   * @param {Command} command The subCommand to register
    */
-  registerSubCommand(CommandOrId, msgGenerator, options) {
-    if (CommandOrId instanceof Command) {
-      this.subCommands.set(CommandOrId.id, CommandOrId);
-    } else if (typeof CommandOrId === 'string') {
-      this.subCommands.set(CommandOrId, new Command(CommandOrId, msgGenerator, options, this));
-    }
+  registerSubCommand(command) {
+    if (command instanceof Command === false) throw new TypeError('command must be an instanceof Command');
+    this.subCommands.set(command.id, command);
   }
 
   /**
@@ -173,7 +174,8 @@ class Command {
    * @returns {boolean}
    */
   checkAuthorization(guildMember, guildChannel) {
-    return guildMember.permissionsIn(guildChannel).hasPermissions(this.options.permissions) || this.options.role === '@everyone' || guildMember.roles.exists('name', this.options.role);
+    // || guildMember.id === guildMember.guild.ownerID
+    return guildMember.permissionsIn(guildChannel).hasPermissions(this.permissions) || this.role === '@everyone' || guildMember.roles.exists('name', this.options.role);
   }
 
   register(client) {
