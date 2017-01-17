@@ -1,17 +1,17 @@
 const DiscordJS = require('discord.js');
-const Constants = require('../Constants');
 
 /**
  * Options to be passed to used in a command
  * @typedef {Object} CommandOptions
+ * @property {string} id The command's id
  * @property {boolean} [caseSensitive=true] Whether or not the command should be case sensitive
  * @property {boolean} [dmOnly=false] Whether or not the command can only be ran in direct messages only
  * @property {boolean} [guildOnly=false] Whether or not the command can only be ran in a guild text channel. Cannot be true if dmOnly is true
  * @property {string} [description=Default Description] The description of the command
  * @property {string} [usage=command ID] The usage for the command
- * @property {Array.<EvaluatedPermissions>|Array.<string>|function} [permissions=@everyone] Can be a EvaluatedPermission object, a permission string, a role name, or a function __must return a boolean__.
- * @property {string|function} [roles=@everyone] Can be a EvaluatedPermission object, a permission string, a role name, or a function __must return a boolean__.
- * @property {string|regex|function|Array<string>} [comparator=none] A string/regex to test the incoming message against, or function that returns a boolean, or and array of strings
+ * @property {Array.<string>} [permissions='SEND_MESSAGES'] Array of required permissions
+ * @property {string} [role=@everyone] Required role name
+ * @property {string|regex|function|Array<string>} [comparator=id] A string/regex to test the incoming message against, or function that returns a boolean, or and array of strings
  */
 
 /**
@@ -19,19 +19,25 @@ const Constants = require('../Constants');
  */
 class Command {
   /**
-   * @param {string} id The ID of the command.
-   * @param {?CommandOptions} options Option to be passed to the command.
+   * @param {CommandOptions} options Option to be passed to the command.
    * @param {?Command} parent Command will only have a parent if it is registered as a sub command
    */
-  constructor(id, ...params) {
-    const [options, parent] = params;
+  constructor(options = {}, parent) {
+    if (typeof options !== 'object') throw new TypeError('options must be an object');
+
+    if (options.id === undefined) throw new Error('id is required');
+    if (options.description === undefined) throw new Error('decription is required');
+    if (options.permissions === undefined) throw new Error('permissions is required');
+    if (typeof options.id !== 'string') throw new TypeError('id must be a string');
+    if (typeof options.description !== 'string') throw new TypeError('description must be a string');
+    if (options.description instanceof Array === false) throw new TypeError('permissions must be an array');
 
     /**
      * The ID of the command
      * @type {string}
      * @readonly
      */
-    this.id = id;
+    this.id = options.id;
 
     /**
      * The parent command, If the command is a sub command
@@ -45,26 +51,26 @@ class Command {
      * @type {boolean}
      * @readonly
      */
-    this.caseSensitive = true;
+    this.caseSensitive = !!options.caseSensitive;
     /**
      * If the command can only be used in DM/GroupDM.
      * @type {boolean}
      * @readonly
      */
-    this.dmOnly = false;
+    this.dmOnly = !!options.dmOnly;
 
     /**
      * If the command can only be used in a guild channel. Cannot be true is dmOnly is true.
      * @type {boolean}
      * @readonly
      */
-    this.guildOnly = false;
+    this.guildOnly = this.dmOnly === true ? false : !!options.guildOnly;
 
     /**
      * The description of the command
      * @type {string}
      */
-    this.description = 'Default Description';
+    this.description = options.description;
 
     /**
      * The usage of the command
@@ -78,18 +84,14 @@ class Command {
      */
     this.names = [];
 
-    this.options = Constants.mergeDefaults(Constants.defaults.CommandOptions, options);
-    this.dmOnly = this.options.dmOnly;
-    this.guildOnly = this.dmOnly === true ? false : this.options.guildOnly;
+    this.registered = false;
 
     /**
      * Commands comparative function
      * @type {string|regex|function|Array<string>} [comparator=none] A string/regex to test the incoming message against, or function that returns a boolean, or and array of strings
      * @readonly
      */
-    this._comparator = this.options.comparator || this.id;
-
-    this._permissions = this.options.permissions;
+    this._comparator = options.comparator || this.id;
 
     /**
      * Collection of subCommands
@@ -155,39 +157,28 @@ class Command {
   }
 
   /**
-   * The function to be executed when the command is called from a GuildChannel
+   * The function to be executed when the command is called
    * @param {external:Message} message The message that is running the command
-   * @param {external:User} author The user that sent the message
-   * @param {external:GuildChannel} channel The channel the command was executed in
-   * @param {Guild} guild The guild that the command was executed in
-   * @param {Client} client The client handling the command
+   * @param {external:GuildChannel|external:DMChannel|external:GroupDMChannel} channel The channel the command was executed in
+   * @param {Array.<string>} args command arguments
    */
-  message() {
-    return;
+  response() {
+    throw new Error('response must be overwritten');
   }
 
   /**
-   * The function to be executed when the command is called from a GroupDMChannel or DMChannel
-   * @param {external:Message} message The message that is running the command
-   * @param {external:User} author The user that sent the message
-   * @param {external:DMChannel|external:GroupDMChannel} channel The channel the command was executed in
-   * @param {Client} client The client handling the command
-   */
-  dmOrGroup() {
-    return;
-  }
-
-  /**
-   *
-   * @param {GuildMember} member The GuildMember to check for authorization
+   * Method to check if a user has the proper permissions to
+   * @param {external:GuildMember} guildMember The GuildMember to check for authorization
+   * @param {external:GuildChannel} guildChannel The GuildChannel the command was called in
    * @returns {boolean}
    */
-  checkAuthorization() {
-    return true;
+  checkAuthorization(guildMember, guildChannel) {
+    return guildMember.permissionsIn(guildChannel).hasPermissions(this.options.permissions) || this.options.role === '@everyone' || guildMember.roles.exists('name', this.options.role);
   }
 
   register(client) {
     this.client = client;
+    this.registered = true;
   }
 
   get aliases() {
@@ -196,10 +187,6 @@ class Command {
     } else {
       return this.Parent.aliases.get(this._id);
     }
-  }
-
-  get permissions() {
-    return this._permissions || '@everyone';
   }
 
   get comparator() {

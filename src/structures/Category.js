@@ -1,6 +1,6 @@
 class Category {
-  constructor() {
-
+  constructor(details) {
+    this.details = details;
   }
 }
 

@@ -1,6 +1,6 @@
 class Categorys {
-  constructor() {
-
+  constructor(client) {
+    this.client = client;
   }
 }
 

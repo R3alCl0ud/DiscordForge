@@ -11,14 +11,14 @@ class CommandHandler {
     if (message.author.bot) return this.client.emit('plainMessage', message);
     if (this.client.options.selfBot === true && message.author.id !== this.client.user.id) return this.client.emit('plainMessage', message);
     if (this.client.options.guildConfigs === true && channel.type === 'text') return this.perGuild(message, channel);
-    if (channel.type === 'dm' || (channel.type === 'group' && this.client)) return this.handleDM(message, channel);
+    if (channel.type === 'dm' || (channel.type === 'group' && this.client.user.bot === false)) return this.handleDM(message, channel);
     let cmdArgs = message.content.split(' ');
     if (channel.type === 'text') {
       if (cmdArgs[0].substring(0, this.client.options.prefix.length) !== this.client.options.prefix) return this.client.emit('plainMessage', message);
       const command = this.getCommand(message);
       if (command !== undefined) {
         if (command.dmOnly === true) return this.client.emit('plainMessage', message);
-        command.message(message, channel, cmdArgs.splice(1));
+        command.response(message, channel, cmdArgs.splice(1));
         return this.client.emit('command', command);
       }
     }
@@ -40,7 +40,7 @@ class CommandHandler {
 
   perGuild(message, channel) {
     let cmdArgs = message.content.split(' ');
-    if (cmdArgs[0].substring(0, guild.prefix.length) !== guild.prefix) return this.client.emit('plainMessage', message);
+    if (cmdArgs[0].substring(0, message.guild.prefix.length) !== message.guild.prefix) return this.client.emit('plainMessage', message);
     const command = this.getCommand(message, true);
     if (command) {
       if (command.dmOnly === true) return this.client.emit('plainMessage', message);

@@ -13,7 +13,8 @@ exports.defaults = {
     dmOnly: false,
     guildOnly: false,
     description: 'Default Description',
-    permissions: '@everyone',
+    permissions: ['@everyone'],
+    roles: ['@everyone'],
   },
 };
 

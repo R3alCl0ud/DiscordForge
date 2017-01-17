@@ -7,32 +7,32 @@ class help extends Command {
     this.loaded = false;
   }
 
-  message(message, author, channel, guild, client) {
+  message(message, channel) {
     if (!this.loaded) {
-      client.registry.plugins.forEach(plugin => {
-        plugin.commands.forEach(client.loadHelp.bind(client));
+      this.client.registry.plugins.forEach(plugin => {
+        plugin.commands.forEach(this.client.loadHelp.bind(this.client));
       });
       this.loaded = true;
     }
 
     const helpText = [`Showing command list for **${message.member.displayName}**\n`];
     helpText.push('**Global Commands**');
-    client.registry.commands.forEach(command => {
+    this.client.registry.commands.forEach(command => {
       if (command.id !== 'help') {
         helpText.push(`    **${command.id}**`);
         if (command.subCommands.size >= 1) helpText.push(getSubCommands(command, 2));
       }
     });
-    if (guild.commands.size >= 1) {
+    if (message.guild.commands.size >= 1) {
       helpText.push('\n**Custom Commands**');
-      guild.commands.forEach(command => {
+      message.guild.commands.forEach(command => {
         helpText.push(`    **${command.id}**`);
       });
     }
 
 
-    client.registry.plugins.forEach(plugin => {
-      if (guild.enabledPlugins.indexOf(plugin.id) === -1 && client.options.guildConfigs === true) return null;
+    this.client.registry.plugins.forEach(plugin => {
+      if (message.guild.enabledPlugins.indexOf(plugin.id) === -1 && this.client.options.guildConfigs === true) return null;
       helpText.push(`\n**${plugin.name}**`);
       plugin.commands.forEach(command => {
         helpText.push(`    **${command.id}**`);
@@ -46,19 +46,20 @@ class help extends Command {
 
 class helpSub extends Command {
   constructor(command, Help) {
-    super(command.id, null, {}, Help);
+    super(command.id, Help);
     this.setAlias(command.comparator);
     this.usage = command.usage;
     this.description = command.description;
-    this.perms = command.permissions;
+    this.perms = command.permissions.join(', ') + command.role;
   }
 
-  message(message, author, channel, guild) {
+  response(message, channel) {
+    const { client, guild } = message;
     let text = `**Showing more info for:** \`${this.id}\`
-**Aliases:** ${this.names + this.comparator.join(', ')}
-**Required Permissions or role:** ${this.perms}
+**Aliases:** ${this.names.join(', ') + this.comparator.join(', ')}
+**Required Permissions and/or role:** ${this.perms}
 **Description:** ${this.description}
-**Usage:** \`${guild.prefix}${this.usage}\``;
+**Usage:** \`${guild ? guild.prefix : client.options.prefix}${this.usage}\``;
     channel.sendMessage(text, { disableEveryone: true });
   }
 }

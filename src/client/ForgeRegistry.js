@@ -1,21 +1,18 @@
 const Plugin = require('../structures/Plugin');
 const Command = require('../structures/Command');
-const Collection = require('discord.js').Collection;
+const { Collection } = require('discord.js');
+
 /**
  * This is the ForgeRegistry Register all the stuff to it
- *
+ * @param {Client} client The client that instantiated the registry
  */
 class ForgeRegistry {
-  /**
-   *
-   * @param {Client} client The client that instantiated the registry
-   */
   constructor(client) {
     this.client = client;
     this.plugins = new Collection();
     this.commands = new Collection();
     this.aliases = new Collection();
-    
+    this.categorys = new Collection();
   }
 
   /**
@@ -33,7 +30,7 @@ class ForgeRegistry {
   registerPlugin(plugin) {
     if (plugin instanceof Plugin) {
       this.plugins.set(plugin.id, plugin);
-      plugin.emit('load', this.client);
+      plugin.loadClient(this.client);
       if (this.client.options.defaultHelp === true) plugin.commands.forEach(this.client.loadHelp.bind(this.client));
     }
   }
@@ -54,6 +51,7 @@ class ForgeRegistry {
   registerCommand(command) {
     if (command instanceof Command) {
       this.commands.set(command.id, command);
+      if (!command.registered) command.register(this.client);
       if (this.client.options.defaultHelp === true) this.client.loadHelp(command);
     }
   }
