@@ -2,151 +2,110 @@
  *  This is the chat handling class file. This is the command running code. Very finiky
  *
  */
-class commandHandler {
+class CommandHandler {
   constructor(client) {
     this.client = client;
   }
 
-  handleMessage(message, author, channel, guild) {
-    if (author.bot) return false;
-    if (this.client.options.selfBot === true && author.id !== this.client.user.id) return false;
-    if (this.client.options.perGuild === true && channel.type === 'text') return this.perGuild(message, author, channel, guild);
-    if (channel.type === 'group') return this.handleGroupDM(message, author, channel);
-    if (channel.type === 'dm') return this.handleDM(message, author, channel);
+  handleMessage(message, channel) {
+    if (message.author.bot) return this.client.emit('plainMessage', message);
+    if (this.client.options.selfBot === true && message.author.id !== this.client.user.id) return this.client.emit('plainMessage', message);
+    if (this.client.options.guildConfigs === true && channel.type === 'text') return this.perGuild(message, channel);
+    if (channel.type === 'dm' || (channel.type === 'group' && this.client.user.bot === false)) return this.handleDM(message, channel);
     let cmdArgs = message.content.split(' ');
-
     if (channel.type === 'text') {
-      if (cmdArgs[0].substring(0, this.client.defaults.prefix.length) !== this.client.defaults.prefix) return false;
-
+      if (cmdArgs[0].substring(0, this.client.options.prefix.length) !== this.client.options.prefix) return this.client.emit('plainMessage', message);
       const command = this.getCommand(message);
-      if (command !== null) {
-        if (command.dmOnly === true) return false;
-        if (typeof command.message === 'string') {
-          channel.sendMessage(command.message);
-        } else if (typeof command.message === 'function') {
-          command.message(message, author, channel, guild, this.client);
-        } else if (command.responses.length > 1) {
-          let response = command.responses[Math.random() * (command.responses.length - 1)];
-          if (typeof response === 'string') {
-            return channel.sendMessage(response);
-          } else if (typeof response === 'function') {
-            return response(message, author, channel, guild, this.client);
-          }
-        }
+      if (command !== undefined) {
+        if (command.dmOnly === true) return this.client.emit('plainMessage', message);
+        command.response(message, channel, cmdArgs.splice(1));
+        return this.client.emit('command', command);
       }
     }
-    return this.client.emit('nonCommand', message);
+    return this.client.emit('plainMessage', message);
   }
-  handleGroupDM(message, author, group) {
+
+  handleDM(message, GroupOrDMChannel) {
     let cmdArgs = message.content.split(' ');
-    if (cmdArgs[0].substring(0, this.client.defaults.prefix.length) !== this.client.defaults.prefix) return false;
+    if (cmdArgs[0].substring(0, this.client.options.prefix.length) !== this.client.options.prefix) return false;
     const command = this.getCommand(message);
     if (command) {
       if (command.guildOnly === true) return false;
-      if (typeof command.message === 'string') {
-        return group.sendMessage(command.message);
-      } else if (typeof command.message === 'function') {
-        return command.message(message, author, group, this.client);
-      } else if (command.responses.length > 1) {
-        let response = command.responses[Math.random() * (command.responses.length - 1)];
-        if (typeof response === 'string') {
-          return group.sendMessage(response);
-        } else if (typeof response === 'function') {
-          return response(message, author, group, this.client);
-        }
-      }
+
+      command.message(message, GroupOrDMChannel, cmdArgs.splice(1));
+      return this.client.emit('command', command);
     }
-    return this.client.emit('nonCommand', message);
+    return this.client.emit('plainMessage', message);
   }
 
-  handleDM(message, author, dmChannel) {
+  perGuild(message, channel) {
     let cmdArgs = message.content.split(' ');
-    if (cmdArgs[0].substring(0, this.client.defaults.prefix.length) !== this.client.defaults.prefix) return false;
-    const command = this.getCommand(message);
-    if (command) {
-      if (command.guildOnly === true) return false;
-      if (typeof command.message === 'string') {
-        return dmChannel.sendMessage(command.message);
-      } else if (typeof command.message === 'function') {
-        return command.message(message, author, dmChannel, this.client);
-      } else if (command.responses.length > 1) {
-        let response = command.responses[Math.random() * (command.responses.length - 1)];
-        if (typeof response === 'string') {
-          return dmChannel.sendMessage(response);
-        } else if (typeof response === 'function') {
-          return response(message, author, dmChannel, this.client);
-        }
-      }
-    }
-    return this.client.emit('nonCommand', message);
-  }
-
-  perGuild(message, author, channel, guild) {
+    if (cmdArgs[0].substring(0, message.guild.prefix.length) !== message.guild.prefix) return this.client.emit('plainMessage', message);
     const command = this.getCommand(message, true);
     if (command) {
-      if (command.dmOnly === true) return false;
-      if (typeof command.message === 'string') {
-        return channel.sendMessage(command.message);
-      } else if (typeof command.message === 'function') {
-        return command.message(message, author, channel, guild, this.client);
-      } else if (command.responses.length > 1) {
-        let response = command.responses[Math.random() * (command.responses.length - 1)];
-        if (typeof response === 'string') {
-          return channel.sendMessage(response);
-        } else if (typeof response === 'function') {
-          return response(message, author, channel, guild, this.client);
-        }
-      }
+      if (command.dmOnly === true) return this.client.emit('plainMessage', message);
+      command.message(message, channel, cmdArgs.splice(1));
+      return this.client.emit('command', message, command);
     }
-    return this.client.emit('nonCommand', message);
+    return this.client.emit('plainMessage', message);
   }
 
-  getCommand(message, perGuild = false) {
+  /**
+   * Checks if a message is a command
+   * @param {Message} message The message to get the command from
+   * @param {boolean} guildConfigs Whether or not custom configs is enabled
+   * @returns {?Command}
+   */
+  getCommand(message, guildConfigs = false) {
     let command = null;
-    if (perGuild) {
-      let args = message.content.split(' ');
-      let label = args[0].substring(message.guild.prefix.length);
-      label = this.client.registry.aliases.get(label) || label;
-      if ((command = this.client.registry.commands.get(label) !== undefined) || (command = this.client.registry.commands.get(label.toLowerCase()) !== undefined && !command.caseSensitive)) {
-        if (args.length > 1) command = this.getSubCommand(args.splice(0, 1), command) || command;
-      }
+    let args = message.content.split(' ');
+    let label = guildConfigs ? args[0].substring(message.guild.prefix.length) : args[0].substring(this.client.options.prefix.length);
+    if (guildConfigs) {
+      message.guild.commands.forEach(cmd => { command = this.testComparator(cmd, label) ? cmd : label === cmd.id ? cmd : command; });
+      this.client.registry.commands.forEach(cmd => { command = this.testComparator(cmd, label) ? cmd : label === cmd.id ? cmd : command; });
       this.client.registry.plugins.forEach(plugin => {
-        if (message.guild.enabledPlugins.indexOf(plugin.id) !== -1) {
-          if ((command = plugin.commands.get(label) !== undefined) || ((command = plugin.commands.get(label.toLowerCase()) !== undefined) && !command.caseSensitive)) {
-            if (args.length > 1) command = this.getSubCommand(args.splice(0, 1), command) || command;
-          }
-        }
+        if (message.guild.enabledPlugins.indexOf(plugin.id) !== -1) plugin.commands.forEach(cmd => { command = this.testComparator(cmd, label) ? cmd : label === cmd.id ? cmd : command; });
       });
-      return command;
     } else {
-      let args = message.content.split(' ');
-      let label = args[0].substring(this.client.defaults.prefix.length);
-
-      label = this.client.registry.aliases.get(label) || label;
-      if ((command = this.client.registry.commands.get(label)) !== undefined || ((command = this.client.registry.commands.get(label.toLowerCase())) !== undefined && !command.caseSensitive)) {
-        if (args.length > 1) command = this.getSubCommand(args.splice(0, 1), command) || command;
-      }
-
+      this.client.registry.commands.forEach(cmd => { command = this.testComparator(cmd, label) ? cmd : label === cmd.id ? cmd : command; });
       this.client.registry.plugins.forEach(plugin => {
-        label = plugin.aliases.get(label) || label;
-        if (((command = plugin.commands.get(label)) !== undefined) || (((command = plugin.commands.get(label.toLowerCase())) !== undefined) && !command.caseSensitive)) {
-          if (args.length > 1) command = this.getSubCommand(args.splice(0, 1), command) || command;
-        }
+        plugin.commands.forEach(cmd => { command = this.testComparator(cmd, label) ? cmd : label === cmd.id ? cmd : command; });
       });
-      return command;
     }
+    args.splice(0, 1);
+    if (args.length > 0 && command !== null) return this.getSubCommand(args, command);
+    return command;
   }
 
   getSubCommand(args, command) {
     let id = command.subCommandAliases.get(args[0]) || args[0];
     let subCommand;
-    if ((subCommand = command.subCommands.get(id)) !== undefined || ((subCommand = command.subCommands.get(id.toLowerCase())) !== undefined && !subCommand.caseSensitive)) {
-      if (args.length > 1) return this.getSubCommand(args.splice(0, 1), command);
+    if (((subCommand = command.subCommands.get(id)) !== undefined) || ((subCommand = command.subCommands.get(id.toLowerCase())) !== undefined && subCommand.caseSensitive === false)) {
+      args.splice(0, 1);
+      if (args.length >= 1 && subCommand !== undefined) return this.getSubCommand(args, subCommand);
       return subCommand;
     }
     return command;
   }
+
+  testComparator(cmd, label) {
+    let command;
+    if (typeof cmd.comparator === 'string') {
+      if (label === cmd.comparator) command = cmd;
+    } else if (cmd.comparator instanceof RegExp) {
+      if (cmd.comparator.test(label)) command = cmd;
+    } else if (cmd.comparator instanceof Array) {
+      cmd.comparator.forEach(comp => {
+        if (typeof comp === 'string') {
+          if (label === comp) command = cmd;
+        } else if (comp instanceof RegExp) {
+          if (comp.test(label)) command = cmd;
+        }
+      });
+    }
+    return !!command;
+  }
 }
 
 
-module.exports = commandHandler;
+module.exports = CommandHandler;

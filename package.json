@@ -1,21 +1,21 @@
 {
   "name": "DiscordForge",
-  "version": "0.2.0",
+  "version": "0.4.0",
   "description": "A command client for discord.js",
-  "main": "index.js",
+  "main": "src/index.js",
   "dependencies": {
-    "discord.js": "github:hydrabolt/discord.js#indev",
-    "node-opus": "^0.2.2",
-    "opusscript": "0.0.1"
+    "discord.js": "github:hydrabolt/discord.js#master",
+    "minami": "^1.1.1"
   },
   "devDependencies": {
     "eslint": "^3.8.1",
+    "jsdoc": "^3.4.3",
     "jsdoc-parse": "^1.2.0",
     "jsdoc-to-markdown": "^1.3.7"
   },
   "scripts": {
     "test": "eslint src/",
-    "docs": "jsdoc2md --json src/*.js src/*/*.js src/*/*/*.js > api.json && jsdoc2md src/*.js src/*/*.js src/*/*/*.js > api.md"
+    "docs": "jsdoc --configure .jsdoc.json --verbose"
   },
   "repository": {
     "type": "git",
@@ -34,9 +34,9 @@
   "author": "Perry Berman & Zach Waldron",
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/r3alcl0ud/Discord-Forge/issues"
+    "url": "https://github.com/r3alcl0ud/DiscordForge/issues"
   },
-  "homepage": "https://github.com/r3alcl0ud/Discord-Forge#readme",
+  "homepage": "https://github.com/r3alcl0ud/DiscordForge#readme",
   "engines": {
     "node": ">=6.0.0"
   }
