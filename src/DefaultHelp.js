@@ -3,12 +3,13 @@ const Tab = '    ';
 
 class help extends Command {
   constructor() {
-    super({ id: 'help',
-        description: 'the default help command',
-        permissions: ['SEND_MESSAGES'],
-        role: '@everyone',
-        comparator: ['help'],
-      });
+    super({
+      id: 'help',
+      description: 'the default help command',
+      permissions: ['SEND_MESSAGES'],
+      role: '@everyone',
+      comparator: ['help'],
+    });
     this.loaded = false;
   }
 
@@ -51,12 +52,13 @@ class help extends Command {
 
 class helpSub extends Command {
   constructor(command, Help) {
-    super({ id: command.id,
-        description: command.description,
-        permissions: ['SEND_MESSAGES'],
-        role: '@everyone',
-        comparator: command.comparator,
-      }, Help);
+    super({
+      id: command.id,
+      description: command.description,
+      permissions: ['SEND_MESSAGES'],
+      role: '@everyone',
+      comparator: command.comparator,
+    }, Help);
     this.setAlias(command.comparator);
     this.perms = command.permissions;
   }
@@ -68,7 +70,9 @@ class helpSub extends Command {
 **Required Permissions and/or role:** ${this.perms.join(', ')}
 **Description:** ${this.description}
 **Usage:** \`${guild ? guild.prefix : client.options.prefix}${this.usage}\``;
-    channel.sendMessage(text, { disableEveryone: true });
+    channel.sendMessage(text, {
+      disableEveryone: true,
+    });
   }
 }
 

@@ -56,6 +56,7 @@ class Command {
      * @readonly
      */
     this.caseSensitive = !!options.caseSensitive;
+
     /**
      * If the command can only be used in DM/GroupDM.
      * @type {boolean}
@@ -82,12 +83,6 @@ class Command {
      */
     this.usage = this.parent instanceof Command ? `${this.parent.id} ${this.id}` : `${this.id}`;
 
-    /**
-     * The aliases of the command
-     * @type {Array<string>}
-     */
-    this.names = [];
-
     this.registered = false;
 
     this.permissions = options.permissions;
@@ -113,6 +108,7 @@ class Command {
      */
     this.subCommandAliases = new DiscordJS.Collection();
   }
+
   /**
    * Registers a command
    * @param {Command} command The subCommand to register
@@ -129,34 +125,6 @@ class Command {
    */
   setSubAlias(subCommand, alias) {
     this.subCommandAliases.set(alias, subCommand);
-  }
-
-  _addAlias(alias) {
-    if (this._comparator instanceof Array !== true) this._comparator = [this._comparator];
-    if (this.Parent instanceof Command) {
-      if (alias instanceof Array) {
-        return alias.forEach(name => {
-          this.Parent.setSubAlias(this, this.caseSensitive ? name : name.toLowerCase());
-          if (this.names.indexOf(name) === -1) this.names.push(this.caseSensitive ? name : name.toLowerCase());
-        });
-      } else if (typeof alias === 'string') {
-        if (this.names.indexOf(alias) === -1) this.names.push(this.caseSensitive ? alias : alias.toLowerCase());
-        return this.Parent.setSubAlias(this, this.caseSensitive ? alias : alias.toLowerCase());
-      }
-    }
-    if (alias instanceof Array) {
-      alias.forEach(name => this.names.indexOf(name) === -1 ? this._comparator.push(this.caseSensitive ? name : name.toLowerCase()) : null);
-    } else if (typeof alias === 'string') {
-      if (this.names.indexOf(alias) === -1) this._comparator.push(this.caseSensitive ? alias : alias.toLowerCase());
-    }
-    return new Error('Alias must be a string or an array of strings');
-  }
-  /**
-   * Registers an alias for this command
-   * @param {string|Array<string>} alias A string or array of strings to set as an alias for the command
-   */
-  setAlias(alias) {
-    this._addAlias(alias);
   }
 
   /**
@@ -176,21 +144,13 @@ class Command {
    * @returns {boolean}
    */
   checkAuthorization(guildMember, guildChannel) {
-    // || guildMember.id === guildMember.guild.ownerID
+    if (guildMember.id === guildMember.guild.ownerID) return true;
     return guildMember.permissionsIn(guildChannel).hasPermissions(this.permissions) || this.role === '@everyone' || guildMember.roles.exists('name', this.options.role);
   }
 
   register(client) {
     this.client = client;
     this.registered = true;
-  }
-
-  get aliases() {
-    if (this.Parent instanceof Command) {
-      return this.Parent.subCommandAliases.get(this._id);
-    } else {
-      return this.Parent.aliases.get(this._id);
-    }
   }
 
   get comparator() {
@@ -200,6 +160,7 @@ class Command {
   get responses() {
     return this._responses;
   }
+
   get parent() {
     return this._parent;
   }

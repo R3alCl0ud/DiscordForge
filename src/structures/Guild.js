@@ -152,7 +152,7 @@ class GuildExtention {
       }).catch(e => this.client.emit('warn', e));
       this.client.getConfigOption(this, 'commands').then(commands => {
         commands.forEach(command => {
-          this.registerCommand(new GuildCommand(this.client, command.id, command.message, this));
+          this.registerCommand(new GuildCommand(command.id, command.message));
         });
       }).catch(e => this.client.emit('warn', e));
       this.client.getConfigOption(this, 'enabledPlugins').then(plugins => {
@@ -212,9 +212,9 @@ class GuildExtention {
   }
 
   /**
-  * Changes the guild's prefix
-  * @param {string} Prefix the new prefix for the guild
-  */
+   * Changes the guild's prefix
+   * @param {string} Prefix the new prefix for the guild
+   */
   changePrefix(Prefix) {
     if (Prefix !== null && typeof Prefix === 'string') {
       this._setPrefix(Prefix);
@@ -241,9 +241,12 @@ class GuildExtention {
 }
 
 class GuildCommand extends Command {
-  constructor(id, message, guild) {
-    super(id, message, guild);
-    this.description = message;
+  constructor(id, message) {
+    super({ id, description: message, permissions: ['SEND_MESSAGES'], role: ['@everyone'], comparator: id });
+  }
+
+  response(message, channel) {
+    channel.sendMessage(this.description);
   }
 }
 

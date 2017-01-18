@@ -3,12 +3,13 @@ const auth = require('./auth.json');
 const ExamplePlugin = require('./selfPlugin');
 const Client = new Forge.Client({ prefix: '//', disableEveryone: true });
 const { Readable, Writable } = require('stream');
+
 class testCommand extends Forge.Command {
   constructor(commandRegistry) {
     super("test", "This is a test", commandRegistry);
   }
-
 }
+
 class evalCommand extends Forge.Command {
   constructor(registry) {
     super("eval", null, registry);
