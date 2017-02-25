@@ -49,7 +49,7 @@ function openJSONSync(JSONFile) {
  * @param {Object} JSONObject The object to write to file
  */
 function writeJSONSync(JSONFile, JSONObject) {
-  fs.writeFileSync(JSONFile, JSON.stringify(JSONObject, null, 't'));
+  fs.writeFileSync(JSONFile, JSON.stringify(JSONObject, null, '\t'));
 }
 
 /**
