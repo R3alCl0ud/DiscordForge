@@ -16,7 +16,7 @@ class CommandHandler {
     if (channel.type === 'text') {
       if (cmdArgs[0].substring(0, this.client.options.prefix.length) !== this.client.options.prefix) return this.client.emit('plainMessage', message);
       const command = this.getCommand(message);
-      if (command !== undefined) {
+      if (command) {
         if (command.dmOnly === true) return this.client.emit('plainMessage', message);
         command.response(message, channel, cmdArgs.splice(1));
         return this.client.emit('command', command);
